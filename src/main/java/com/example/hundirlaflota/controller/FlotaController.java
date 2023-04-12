@@ -59,8 +59,15 @@ public class FlotaController implements Initializable {
 
             try {
               int turno= Integer.parseInt( response);
-              if(turno%2==0 && turnoPar) client.turno = true;
-              else if (turno%2!=0 && !turnoPar)client.turno = true;
+              if(turno%2==0 && turnoPar){
+                  System.out.println("Turno par numero" + turno);
+                  client.turno = true;
+              }
+              else if (turno%2!=0 && !turnoPar){
+                  client.turno = true;
+                  System.out.println("Turno impar numero" + turno);
+
+              }
             }
             catch (NumberFormatException e){
                 System.out.println("No se NumberFormatException ");

@@ -27,6 +27,29 @@ public abstract class DatagramSocketClient {
         serverPort = port;
         socket = new DatagramSocket();
     }
+    public void runClientTorn() throws IOException {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    byte[] receivedData = new byte[1024];
+                    byte[] sendingData;
+                    String consultaT="consultaTurno";
+                    sendingData = consultaT.getBytes();
+                    DatagramPacket packet = new DatagramPacket(sendingData, sendingData.length, serverIP, serverPort);
+                    socket.send(packet);
+                    packet = new DatagramPacket(receivedData, 1024);
+                    socket.receive(packet);
+                    getResponse(packet.getData(), packet.getLength());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        timer.schedule(task, 0, 4000);
+    }
+    /*
     public void startTimer() {
         timer = new Timer();
         timerTask = new TimerTask() {
@@ -46,7 +69,7 @@ public abstract class DatagramSocketClient {
         byte[] receivedData = new byte[1024];
         byte[] sendingData;
         String consultaTurno= "consultaTurno";
-        sendingData = getRequest();
+        sendingData = consultaTurno.getBytes();
         DatagramPacket packet = new DatagramPacket(sendingData, sendingData.length, serverIP, serverPort);
         socket.send(packet);
         packet = new DatagramPacket(receivedData, 1024);
@@ -58,6 +81,8 @@ public abstract class DatagramSocketClient {
         lastResponse = response;
     }
 
+
+     */
     public void runClient() throws IOException {
         byte [] receivedData = new byte[1024];
         byte [] sendingData;
@@ -78,7 +103,8 @@ public abstract class DatagramSocketClient {
         DatagramPacket packet = new DatagramPacket(data, data.length, serverIP, serverPort);
         socket.send(packet);
         turno=false;
-        startTimer();
+      //  startTimer();
+        runClientTorn();
 
     }
 

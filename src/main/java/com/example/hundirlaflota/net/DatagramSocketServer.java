@@ -67,7 +67,7 @@ public class DatagramSocketServer {
                     packet = new DatagramPacket(String.valueOf(turno).getBytes(),String.valueOf(turno).getBytes().length,clientIP,clientPort);
                     socket.send(packet);
                 }
-                if(!nom.equals(nomSplit[0])) {
+                else  if(!nom.equals(nomSplit[0])) {
                     nom2 = nomSplit[0];
                     comptadorClients++;
                     System.out.println(nom2);
