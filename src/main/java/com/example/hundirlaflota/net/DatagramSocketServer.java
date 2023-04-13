@@ -82,7 +82,7 @@ public class DatagramSocketServer {
                 socket.send(packet);
                 turno++;
             }
-            else {
+            else if (!nomSplit[0].equals("consultaTurno")){
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
                 String response = new String(sendingDataEnemy, 0, sendingDataEnemy.length);
                 System.out.println(response);

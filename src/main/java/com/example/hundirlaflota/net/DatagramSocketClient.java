@@ -28,7 +28,7 @@ public abstract class DatagramSocketClient {
         socket = new DatagramSocket();
     }
     public void runClientTorn() throws IOException {
-        Timer timer = new Timer();
+            timer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
@@ -42,7 +42,8 @@ public abstract class DatagramSocketClient {
                         packet = new DatagramPacket(receivedData, 1024);
                         socket.receive(packet);
                         String respuesta = new String( receivedData,0,receivedData.length);
-                        System.out.println("response de la consulta de turno"+getResponse(packet.getData(), packet.getLength()));
+                        getResponse(packet.getData(), packet.getLength());
+                        System.out.println("response de la consulta de turno "+respuesta);
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -51,6 +52,12 @@ public abstract class DatagramSocketClient {
             };
             timer.schedule(task, 0, 4000);
 
+    }
+    public void stopClientTorn() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
     /*
     public void startTimer() {
@@ -107,7 +114,7 @@ public abstract class DatagramSocketClient {
         socket.send(packet);
         turno=false;
       //  startTimer();
-      //  runClientTorn();
+        runClientTorn();
 
     }
 

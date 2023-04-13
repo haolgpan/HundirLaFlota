@@ -94,7 +94,7 @@ public class FlotaController implements Initializable {
             if (response.contains("turno par")) {
                 turnoPar = true;
                // turno=true;
-                Platform.runLater(() -> lblResponse.setText(resp));
+                Platform.runLater(() -> lblResponse.setText(response));
 
             }
 
@@ -105,18 +105,22 @@ public class FlotaController implements Initializable {
                 if (numTurno % 2 == 0 && turnoPar) {
                     System.out.println("Turno par numero" + numTurno);
                     turno = true;
+                    stopClientTorn();
+                    Platform.runLater(() -> activarBotones(new ActionEvent()));
+
 
                 } else if (numTurno % 2 != 0 && !turnoPar) {
                     turno = true;
+                    stopClientTorn();
                     System.out.println("Turno impar numero" + numTurno);
+                    Platform.runLater(() -> activarBotones(new ActionEvent()));
+
 
                 }
             }
             else {
-                System.out.println("RecibidaRespuesta");
-                System.out.println(response);
-                Platform.runLater(() -> lblResponse.setText(resp));
-                Platform.runLater(() -> activarBotones(new ActionEvent()));
+                System.out.println("RecibidaRespuesta con jugada " + response);
+                Platform.runLater(() -> lblResponse.setText(response));
 
             }
           return length;
@@ -143,7 +147,7 @@ public class FlotaController implements Initializable {
         String numBoton = button.getId(); // obtiene el número del botón a partir del ID
 
       // Desactivar los botones
-       // desactivarBotones(event);
+        desactivarBotones(event);
         pulsacionesEnemy++;
         counterPush2.setText(String.valueOf(pulsacionesEnemy));
 
