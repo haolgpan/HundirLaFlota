@@ -23,7 +23,10 @@ public class DatagramSocketServer {
     private String nom2=null;
     private int comptadorClients;
     private boolean acabat;
+
     private boolean complert = false;
+
+    private boolean encert = false;
     private ArrayList <String> arrayTirades= new ArrayList<>();
 
     private String posicionesJug1;
@@ -75,8 +78,16 @@ public class DatagramSocketServer {
                 String packet1 = new String(processData(packet.getData(), packet.getLength()), 0, packet.getLength());
                 nomSplit = packet1.split(" ");
                 if (nomSplit[0].equals("consultaTurno")||nomSplit[0].equals("envio")) {
-                    packet = new DatagramPacket(String.valueOf(turno).getBytes(), String.valueOf(turno).getBytes().length, clientIP, clientPort);
-                    socket.send(packet);
+                    if(encert){
+                        encert=false;
+                        String blanco = "blanco";
+                        packet = new DatagramPacket(blanco.getBytes(), blanco.getBytes().length, clientIP, clientPort);
+                        socket.send(packet);
+                    }
+                    else {
+                        packet = new DatagramPacket(String.valueOf(turno).getBytes(), String.valueOf(turno).getBytes().length, clientIP, clientPort);
+                        socket.send(packet);
+                    }
                 }
                 //Si el nom NO es null perque ja hi ha un jugador possem el nom del segon jugador a la variable nom2
                 else if (!nom.equals(nomSplit[0])) {
@@ -101,12 +112,19 @@ public class DatagramSocketServer {
                 String jugadaArray= jugadaAnterior[1].replace("boton","botonplayer");
                 if(nom.equals(nomSplit[0]) ){
                     for(String p :posicionBarcosJugador2){
-                        if (p.equals(jugadaArray)) System.out.println("MaTCH -------------------------"+posicionesJug2);
+                        if (p.equals(jugadaArray)){
+                            System.out.println("MaTCH -------------------------"+posicionesJug2);
+                            encert=true;
+                        }
+
                     }
                 }
                 else if(nom2.equals(nomSplit[0]) ){
                     for(String p :posicionBarcosJugador1){
-                        if (p.equals(jugadaArray)) System.out.println("MaTCH -------------------------"+posicionesJug1);
+                        if (p.equals(jugadaArray)){
+                            System.out.println("MaTCH -------------------------"+posicionesJug1);
+                            encert=true;
+                        }
                     }
                 }
                 packet = new DatagramPacket(sendingDataEnemy,sendingDataEnemy.length,clientIP,clientPort);

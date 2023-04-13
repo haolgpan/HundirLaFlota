@@ -11,15 +11,12 @@ public abstract class DatagramSocketClient {
     InetAddress serverIP;
     int serverPort;
     DatagramSocket socket;
-    Scanner sc;
-    String nom;
+
     private Timer timer;
-    private TimerTask timerTask;
-    private int lastResponse;
+
     public boolean turno=true;
     public boolean turnoPar=false;
     public DatagramSocketClient() {
-        sc = new Scanner(System.in);
     }
 
     public void init(String host, int port) throws SocketException, UnknownHostException {

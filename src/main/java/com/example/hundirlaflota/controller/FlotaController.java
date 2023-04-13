@@ -54,7 +54,7 @@ public class FlotaController implements Initializable {
     private int pulsacionesEnemy = 0;
     private int contadorBarcos = 0;
 
-
+    private Button botonBlanco;
     String resp = "";
 
    //boolean turnoPar=false;
@@ -135,6 +135,9 @@ public class FlotaController implements Initializable {
                 Platform.runLater(() -> lblResponse.setText(response));
 
             }
+            else if (response.equals("blanco")){
+                botonBlanco.setStyle("-fx-background-color: red");
+            }
 
             else if (response.matches("[^a-zA-Z]+")) {
 
@@ -184,7 +187,7 @@ public class FlotaController implements Initializable {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
         button.setStyle("-fx-background-color: deepskyblue");
         String numBoton = button.getId(); // obtiene el número del botón a partir del ID
-
+        botonBlanco = button;
       // Desactivar los botones
         desactivarBotones(event);
         pulsacionesEnemy++;
@@ -192,10 +195,8 @@ public class FlotaController implements Initializable {
 
         try {
             String message = nom+" " + numBoton; // crea un mensaje con el valor actualizado del contador
-            System.out.println("Estado booleano "+client.turno);
-            System.out.println("boton numero " + numBoton);
+
             client.send(message.getBytes()); // envía el mensaje al servidor
-            System.out.println("Estado booleano "+client.turno);
 
             client.runClient();
         } catch (IOException e) {
