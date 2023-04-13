@@ -17,7 +17,7 @@ public abstract class DatagramSocketClient {
     private TimerTask timerTask;
     private int lastResponse;
     public boolean turno=true;
-    public boolean turnoPar=true;
+    public boolean turnoPar=false;
     public DatagramSocketClient() {
         sc = new Scanner(System.in);
     }
@@ -29,25 +29,28 @@ public abstract class DatagramSocketClient {
     }
     public void runClientTorn() throws IOException {
         Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    byte[] receivedData = new byte[1024];
-                    byte[] sendingData;
-                    String consultaT="consultaTurno";
-                    sendingData = consultaT.getBytes();
-                    DatagramPacket packet = new DatagramPacket(sendingData, sendingData.length, serverIP, serverPort);
-                    socket.send(packet);
-                    packet = new DatagramPacket(receivedData, 1024);
-                    socket.receive(packet);
-                    getResponse(packet.getData(), packet.getLength());
-                } catch (IOException e) {
-                    e.printStackTrace();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        byte[] receivedData = new byte[1024];
+                        byte[] sendingData;
+                        String consultaT = "consultaTurno";
+                        sendingData = consultaT.getBytes();
+                        DatagramPacket packet = new DatagramPacket(sendingData, sendingData.length, serverIP, serverPort);
+                        socket.send(packet);
+                        packet = new DatagramPacket(receivedData, 1024);
+                        socket.receive(packet);
+                        String respuesta = new String( receivedData,0,receivedData.length);
+                        System.out.println("response de la consulta de turno"+getResponse(packet.getData(), packet.getLength()));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        };
-        timer.schedule(task, 0, 4000);
+            };
+            timer.schedule(task, 0, 4000);
+
     }
     /*
     public void startTimer() {
@@ -104,7 +107,7 @@ public abstract class DatagramSocketClient {
         socket.send(packet);
         turno=false;
       //  startTimer();
-        runClientTorn();
+      //  runClientTorn();
 
     }
 

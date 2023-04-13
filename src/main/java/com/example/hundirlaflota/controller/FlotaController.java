@@ -21,15 +21,24 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class FlotaController implements Initializable {
     @FXML
     private Label lblResponse;
     @FXML
+    private Label namePlayer;
+    @FXML
     TextField txtNum;
     private String nom;
+    @FXML
+    GridPane gridPlayer;
+    @FXML
+    GridPane gridEnemy;
+
     @FXML
     Circle circleServer;
     @FXML
@@ -45,39 +54,73 @@ public class FlotaController implements Initializable {
     private int pulsacionesEnemy = 0;
     String resp = "";
 
-   boolean turnoPar=false;
+   //boolean turnoPar=false;
 
 
 
-   // ClientTcpLlista clientTcpLlista = new ClientTcpLlista();
+    // Obtener los botones del GridPane
+    // Obtener los botones del GridPane
+    @FXML
+    private void activarBotones(ActionEvent event) {
+        // Obtener los botones del GridPane
+        List<Button> botones = gridEnemy.getChildren().stream()
+                .filter(node -> node instanceof Button)
+                .map(node -> (Button) node)
+                .collect(Collectors.toList());
+
+        // Desactivar los botones
+        botones.forEach(button -> button.setDisable(false));
+    }
+    @FXML
+    private void desactivarBotones(ActionEvent event) {
+        // Obtener los botones del GridPane
+        List<Button> botones = gridEnemy.getChildren().stream()
+                .filter(node -> node instanceof Button)
+                .map(node -> (Button) node)
+                .collect(Collectors.toList());
+
+        // Desactivar los botones
+        botones.forEach(button -> button.setDisable(true));
+}
+
+
+
+    // ClientTcpLlista clientTcpLlista = new ClientTcpLlista();
     DatagramSocketClient client = new DatagramSocketClient() {
         @Override
         public int getResponse(byte[] data, int length) {
-            resp = new String(data,0,length);
+            resp = new String(data, 0, length);
             String response = new String(data, 0, length);
-            if(response.equals("Esperando respuesta , turno par")) turnoPar=true;
-
-            try {
-              int turno= Integer.parseInt( response);
-              if(turno%2==0 && turnoPar){
-                  System.out.println("Turno par numero" + turno);
-                  client.turno = true;
-              }
-              else if (turno%2!=0 && !turnoPar){
-                  client.turno = true;
-                  System.out.println("Turno impar numero" + turno);
-
-              }
-            }
-            catch (NumberFormatException e){
-                System.out.println("No se NumberFormatException ");
+            if (response.contains("turno par")) {
+                turnoPar = true;
+               // turno=true;
+                Platform.runLater(() -> lblResponse.setText(resp));
 
             }
 
-            System.out.println("RecibidaRespuesta");
-            System.out.println(response);
-            Platform.runLater(() -> lblResponse.setText(resp));
-            return length;
+            else if (response.matches("[^a-zA-Z]+")) {
+
+                int numTurno = Integer.parseInt(response);
+
+                if (numTurno % 2 == 0 && turnoPar) {
+                    System.out.println("Turno par numero" + numTurno);
+                    turno = true;
+
+                } else if (numTurno % 2 != 0 && !turnoPar) {
+                    turno = true;
+                    System.out.println("Turno impar numero" + numTurno);
+
+                }
+            }
+            else {
+                System.out.println("RecibidaRespuesta");
+                System.out.println(response);
+                Platform.runLater(() -> lblResponse.setText(resp));
+                Platform.runLater(() -> activarBotones(new ActionEvent()));
+
+            }
+          return length;
+
         }
 
         @Override
@@ -98,6 +141,9 @@ public class FlotaController implements Initializable {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
         button.setStyle("-fx-background-color: deepskyblue");
         String numBoton = button.getId(); // obtiene el número del botón a partir del ID
+
+      // Desactivar los botones
+       // desactivarBotones(event);
         pulsacionesEnemy++;
         counterPush2.setText(String.valueOf(pulsacionesEnemy));
 
@@ -144,7 +190,7 @@ public class FlotaController implements Initializable {
 
             dialog.getDialogPane().setContent(gridPane);
 
-            Platform.runLater(txtIp::requestFocus);
+            Platform.runLater(txtName::requestFocus);
 
             dialog.setResultConverter(dButton -> {
                 if(dButton == conButton) {
@@ -162,6 +208,8 @@ public class FlotaController implements Initializable {
                     Thread.sleep(500);
                     circleClient.setFill(Color.BLUE);
                     lblResponse.setText("connectat com "+ nom+ ". Pulsa un boton para turno");
+                    namePlayer.setText(nom);
+
                 } catch (SocketException | UnknownHostException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

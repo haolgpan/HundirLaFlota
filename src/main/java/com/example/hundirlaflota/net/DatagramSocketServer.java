@@ -35,69 +35,74 @@ public class DatagramSocketServer {
 
     public void runServer() throws IOException {
         byte [] receivingData = new byte[1024];
-        byte [] sendingData;
+        String[]nomSplit = new String[0];
+
         InetAddress clientIP;
         int clientPort;
 
         while(!acabat ) {
             DatagramPacket packet = new DatagramPacket(receivingData,1024);
             socket.receive(packet);
-            sendingData = processData(packet.getData(),packet.getLength());
             if(sendingDataEnemy==null){
                 sendingDataEnemy = new String("Esperando respuesta , turno par").getBytes();
-                turno++;
             }
-                //Llegim el port i l'adreça del client per on se li ha d'enviar la resposta
+            //Llegim el port i l'adreça del client per on se li ha d'enviar la resposta
             clientIP = packet.getAddress();
             clientPort = packet.getPort();
+            //Si el nom es null perque no hi han jugadors possem el nom del primer jugador a la variable nom
             if(nom==null){
                 String packet1= new String(processData(packet.getData(),packet.getLength()),0,packet.getLength());
-                String[]nomSplit= packet1.split(" ");
+                nomSplit= packet1.split(" ");
                 nom=nomSplit[0];
-                comptadorClients++;
+              //  comptadorClients++;
                 System.out.println(nom);
-                turno++;
-
-
             }
-            else if (nom!=null){
-                String packet1= new String(processData(packet.getData(),packet.getLength()),0,packet.getLength());
-                String[]nomSplit= packet1.split(" ");
-                if (nomSplit[0].equals("consultaTurno")){
-                    packet = new DatagramPacket(String.valueOf(turno).getBytes(),String.valueOf(turno).getBytes().length,clientIP,clientPort);
+            //Si el nom NO es null i ens arriba una consulta del torn enviem el torn al jugador que el demana
+
+            else if (nom!=null) {
+                String packet1 = new String(processData(packet.getData(), packet.getLength()), 0, packet.getLength());
+                nomSplit = packet1.split(" ");
+                if (nomSplit[0].equals("consultaTurno")) {
+                    packet = new DatagramPacket(String.valueOf(turno).getBytes(), String.valueOf(turno).getBytes().length, clientIP, clientPort);
                     socket.send(packet);
                 }
-                else  if(!nom.equals(nomSplit[0])) {
+                //Si el nom NO es null perque ja hi ha un jugador possem el nom del segon jugador a la variable nom2
+                else if (!nom.equals(nomSplit[0])) {
                     nom2 = nomSplit[0];
-                    comptadorClients++;
                     System.out.println(nom2);
-                    turno++;
                 }
-                else  System.out.println(nom);
-
-
             }
-            System.out.println("sendEnemy "+ new String(sendingDataEnemy));
-            if (arrayTirades.size()>3) {
-                System.out.println("ArrayJugada rebuda correctament= "+ arrayTirades.get(arrayTirades.size()-3));
-                sendingDataEnemy = arrayTirades.get(arrayTirades.size()-3).getBytes();
+            //Continua el fil
+
+            if (arrayTirades.size()>1 && !nomSplit[0].equals("consultaTurno")) {
+                System.out.println("sendEnemy "+ new String(sendingDataEnemy));
+                System.out.println("ArrayJugada rebuda correctament= "+ arrayTirades.get(arrayTirades.size()-2));
+                sendingDataEnemy = arrayTirades.get(arrayTirades.size()-2).getBytes();
                 packet = new DatagramPacket(sendingDataEnemy,sendingDataEnemy.length,clientIP,clientPort);
                 socket.send(packet);
+                turno++;
             }
             else {
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
+                String response = new String(sendingDataEnemy, 0, sendingDataEnemy.length);
+                System.out.println(response);
                 socket.send(packet);
+                turno++;
             }
-          //  sendingDataEnemy=sendingData;
-
         }
     }
 
-    //El server retorna al client el mateix missatge que li arriba però en majúscules
+    //El server retorna al client la jugada de l'anterior jugador
     public byte[] processData(byte[] data, int lenght) {
-        String nombre = new String(data,0,lenght);
-        System.out.println("rebut->"+nombre);
-        arrayTirades.add(nombre);
+        String jugada = new String(data,0,lenght);
+        System.out.println("rebut->"+jugada);
+        System.out.println("Turno numero"+ turno);
+        if (!jugada.equals("consultaTurno")){
+            arrayTirades.add(jugada);
+            System.out.println(arrayTirades.toString());
+        }
+
+
        // fi = ns.comprova(Integer.parseInt(nombre));
    //     if(fi==0) acabat=true;
        // byte[] resposta = ns.comprova(nombre).getBytes();
