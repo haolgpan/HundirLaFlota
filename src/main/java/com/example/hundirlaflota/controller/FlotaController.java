@@ -52,10 +52,13 @@ public class FlotaController implements Initializable {
     private int pulsaciones = 0;
 
     private int pulsacionesEnemy = 0;
+    private int contadorBarcos = 0;
+
+
     String resp = "";
 
    //boolean turnoPar=false;
-
+    String posicionBarcos="";
 
 
     // Obtener los botones del GridPane
@@ -80,28 +83,43 @@ public class FlotaController implements Initializable {
 
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(true));
+}  @FXML
+    private void desactivarBotonesPlayer(ActionEvent event) {
+        // Obtener los botones del GridPane
+        List<Button> botones = gridPlayer.getChildren().stream()
+                .filter(node -> node instanceof Button)
+                .map(node -> (Button) node)
+                .collect(Collectors.toList());
+
+        // Desactivar los botones
+        botones.forEach(button -> button.setDisable(true));
 }
 //Reflejar Jugada
-@FXML
-private void reflejarJugada(String jugada) {
+     @FXML
+     private void reflejarJugada(String jugada ,ActionEvent event) {
     // Obtener los botones del GridPane
-    String []jugadaSplit;
-    jugadaSplit=jugada.split(" ");
-    String jugadaEnemy= jugadaSplit [1];
-    jugadaEnemy = jugadaEnemy.replace("boton","botonplayer");
-    System.out.println(jugadaEnemy);
-    List<Button> botones = gridPlayer.getChildren().stream()
-            .filter(node -> node instanceof Button)
-            .map(node -> (Button) node)
-            .collect(Collectors.toList());
+         if (!jugada.equals("consultaTurno")&&!jugada.contains("envio")) {
+             String[] jugadaSplit;
+             jugadaSplit = jugada.split(" ");
+             String jugadaEnemy = jugadaSplit[1];
+             jugadaEnemy = jugadaEnemy.replace("boton", "botonplayer");
+             System.out.println(jugadaEnemy);
+             // Obtener los botones del GridPane
+             List<Button> botones = gridPlayer.getChildren().stream()
+                     .filter(node -> node instanceof Button)
+                     .map(node -> (Button) node)
+                     .collect(Collectors.toList());
 
-    // Desactivar los botones
+             // Desactivar los botones
+             Button miBoton = (Button) gridPlayer.lookup("#" + jugadaEnemy);
+             if(miBoton.getStyle().equals("-fx-background-color: black")){
+                 miBoton.setStyle("-fx-background-color: red");
 
-    botones.forEach(button -> button.setDisable(false));
-  //  for (Button b : botones) {
-   //     if (b.getId().equals(jugadaEnemy))b.setStyle("-fx-background-color: deepskyblue");
+             }
+             else miBoton.setStyle("-fx-background-color: deepskyblue");
+         }
 
-    //}
+
 }
 
 
@@ -141,7 +159,7 @@ private void reflejarJugada(String jugada) {
             else {
                 System.out.println("RecibidaRespuesta con jugada " + response);
                 Platform.runLater(() -> lblResponse.setText(response));
-                reflejarJugada(response);
+                reflejarJugada(response,new ActionEvent());
 
             }
           return length;
@@ -184,6 +202,23 @@ private void reflejarJugada(String jugada) {
             e.printStackTrace();
         }
     }
+  @FXML
+    protected void handlePlayerButtonAction(ActionEvent event) throws IOException {
+      Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
+      if (button.getId().contains("player")) {
+          posicionBarcos+= button.getId()+",";
+          contadorBarcos++;
+          button.setStyle("-fx-background-color: black");
+          if(contadorBarcos==2){
+              desactivarBotonesPlayer(new ActionEvent());
+              posicionBarcos= posicionBarcos.substring(0,posicionBarcos.length()-1);
+              activarBotones(new ActionEvent());
+             // client.send(posicionBarcos.getBytes());
+
+          }
+
+      }
+  }
 
 
     @FXML
@@ -220,6 +255,7 @@ private void reflejarJugada(String jugada) {
             dialog.setResultConverter(dButton -> {
                 if(dButton == conButton) {
                     nom = txtName.getText();
+                    posicionBarcos+= nom+ " ";
                     return new Pair<>(txtIp.getText(),Integer.parseInt(txtPort.getText()));
                 }
                 return null;
@@ -281,12 +317,14 @@ private void reflejarJugada(String jugada) {
     }
 
     public void initialize() {
+        desactivarBotonesPlayer(new ActionEvent());
         counterPush.setText(String.valueOf(pulsaciones));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        desactivarBotones(new ActionEvent());
     }
 }
 

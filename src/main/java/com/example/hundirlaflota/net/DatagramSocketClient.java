@@ -50,7 +50,7 @@ public abstract class DatagramSocketClient {
                     }
                 }
             };
-            timer.schedule(task, 0, 4000);
+            timer.schedule(task, 0, 500);
 
     }
     public void stopClientTorn() {

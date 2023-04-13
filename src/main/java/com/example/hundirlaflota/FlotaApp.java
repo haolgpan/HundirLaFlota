@@ -12,7 +12,7 @@ public class FlotaApp extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(FlotaApp.class.getResource("flota.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        stage.setTitle("Menu");
+        stage.setTitle("Hundir La Flota");
         stage.setScene(scene);
         stage.show();
     }
