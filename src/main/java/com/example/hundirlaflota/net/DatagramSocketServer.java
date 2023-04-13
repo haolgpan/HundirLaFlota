@@ -63,6 +63,8 @@ public class DatagramSocketServer {
                 nomSplit= packet1.split(" ");
                 nom=nomSplit[0];
                 posicionesJug1=nomSplit[1];
+                String [] posJug1Array= posicionesJug1.split(",");
+                for (String p : posJug1Array)posicionBarcosJugador1.add(p);
               //  comptadorClients++;
                 System.out.println(nom);
                 System.out.println(posicionesJug1);
@@ -80,6 +82,8 @@ public class DatagramSocketServer {
                 else if (!nom.equals(nomSplit[0])) {
                     nom2 = nomSplit[0];
                     posicionesJug2=nomSplit[1];
+                    String [] posJug2Array= posicionesJug2.split(",");
+                    for (String p : posJug2Array)posicionBarcosJugador2.add(p);
                     System.out.println(nom2);
                     System.out.println(posicionesJug2);
 
@@ -91,11 +95,25 @@ public class DatagramSocketServer {
                 System.out.println("sendEnemy "+ new String(sendingDataEnemy));
                 System.out.println("ArrayJugada rebuda correctament= "+ arrayTirades.get(arrayTirades.size()-2));
                 sendingDataEnemy = arrayTirades.get(arrayTirades.size()-2).getBytes();
+
+                //Comprobacion de disparo certero
+                String []jugadaAnterior= arrayTirades.get(arrayTirades.size()-1).split(" ");
+                String jugadaArray= jugadaAnterior[1].replace("boton","botonplayer");
+                if(nom.equals(nomSplit[0]) ){
+                    for(String p :posicionBarcosJugador2){
+                        if (p.equals(jugadaArray)) System.out.println("MaTCH -------------------------"+posicionesJug2);
+                    }
+                }
+                else if(nom2.equals(nomSplit[0]) ){
+                    for(String p :posicionBarcosJugador1){
+                        if (p.equals(jugadaArray)) System.out.println("MaTCH -------------------------"+posicionesJug1);
+                    }
+                }
                 packet = new DatagramPacket(sendingDataEnemy,sendingDataEnemy.length,clientIP,clientPort);
                 socket.send(packet);
                 turno++;
             }
-            else if (!nomSplit[0].equals("consultaTurno")){
+            else if (!nomSplit[0].equals("consultaTurno")&& !nomSplit[1].contains(",")){
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
                 String response = new String(sendingDataEnemy, 0, sendingDataEnemy.length);
                 System.out.println(response);
@@ -108,11 +126,11 @@ public class DatagramSocketServer {
     //El server retorna al client la jugada de l'anterior jugador
     public byte[] processData(byte[] data, int lenght) {
         String jugada = new String(data,0,lenght);
-        System.out.println("rebut->"+jugada);
-        System.out.println("Turno numero"+ turno);
+       // System.out.println("rebut->"+jugada);
+     //   System.out.println("Turno numero"+ turno);
         if (!jugada.equals("consultaTurno")&&!jugada.contains(",")){
             arrayTirades.add(jugada);
-            System.out.println(arrayTirades.toString());
+         //   System.out.println(arrayTirades.toString());
         }
 
 

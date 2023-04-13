@@ -103,7 +103,7 @@ public class FlotaController implements Initializable {
              jugadaSplit = jugada.split(" ");
              String jugadaEnemy = jugadaSplit[1];
              jugadaEnemy = jugadaEnemy.replace("boton", "botonplayer");
-             System.out.println(jugadaEnemy);
+            // System.out.println(jugadaEnemy);
              // Obtener los botones del GridPane
              List<Button> botones = gridPlayer.getChildren().stream()
                      .filter(node -> node instanceof Button)
@@ -157,7 +157,7 @@ public class FlotaController implements Initializable {
                 }
             }
             else {
-                System.out.println("RecibidaRespuesta con jugada " + response);
+               // System.out.println("RecibidaRespuesta con jugada " + response);
                 Platform.runLater(() -> lblResponse.setText(response));
                 reflejarJugada(response,new ActionEvent());
 
@@ -213,7 +213,7 @@ public class FlotaController implements Initializable {
               desactivarBotonesPlayer(new ActionEvent());
               posicionBarcos= posicionBarcos.substring(0,posicionBarcos.length()-1);
               activarBotones(new ActionEvent());
-             // client.send(posicionBarcos.getBytes());
+              client.send(posicionBarcos.getBytes());
 
           }
 

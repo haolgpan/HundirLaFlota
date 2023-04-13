@@ -43,7 +43,7 @@ public abstract class DatagramSocketClient {
                         socket.receive(packet);
                         String respuesta = new String( receivedData,0,receivedData.length);
                         getResponse(packet.getData(), packet.getLength());
-                        System.out.println("response de la consulta de turno "+respuesta);
+                       // System.out.println("response de la consulta de turno "+respuesta);
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -59,63 +59,21 @@ public abstract class DatagramSocketClient {
             timer = null;
         }
     }
-    /*
-    public void startTimer() {
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    runClientTorn();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        timer.schedule(timerTask, 0, 1000); // Ejecuta la tarea cada segundo
-    }
 
-    public void runClientTorn() throws IOException {
-        byte[] receivedData = new byte[1024];
-        byte[] sendingData;
-        String consultaTurno= "consultaTurno";
-        sendingData = consultaTurno.getBytes();
-        DatagramPacket packet = new DatagramPacket(sendingData, sendingData.length, serverIP, serverPort);
-        socket.send(packet);
-        packet = new DatagramPacket(receivedData, 1024);
-        socket.receive(packet);
-        int response = getResponse(packet.getData(), packet.getLength());
-        if (response != lastResponse) {
-            timerTask.cancel(); // Cancela la tarea del temporizador
-        }
-        lastResponse = response;
-    }
-
-
-     */
     public void runClient() throws IOException {
-        byte [] receivedData = new byte[1024];
-        byte [] sendingData;
 
-       // sendingData = getRequest();
-        DatagramPacket packet =
-                //new DatagramPacket(sendingData,sendingData.length,serverIP,serverPort);
-        //socket.send(packet);
-        //packet =
-                new DatagramPacket(receivedData,1024);
+        byte [] receivedData = new byte[1024];
+        DatagramPacket packet = new DatagramPacket(receivedData,1024);
         socket.receive(packet);
         getResponse(packet.getData(), packet.getLength());
-
-
     }
-//MetodeSend Personalitzat
+
+    //MetodeSend Personalitzat
     public void send(byte[] data) throws IOException {
         DatagramPacket packet = new DatagramPacket(data, data.length, serverIP, serverPort);
         socket.send(packet);
         turno=false;
-      //  startTimer();
         runClientTorn();
-
     }
 
     //Resta de conversa que se li envia al server
