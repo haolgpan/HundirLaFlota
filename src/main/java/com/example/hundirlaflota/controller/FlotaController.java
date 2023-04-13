@@ -59,7 +59,6 @@ public class FlotaController implements Initializable {
 
 
     // Obtener los botones del GridPane
-    // Obtener los botones del GridPane
     @FXML
     private void activarBotones(ActionEvent event) {
         // Obtener los botones del GridPane
@@ -82,7 +81,28 @@ public class FlotaController implements Initializable {
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(true));
 }
+//Reflejar Jugada
+@FXML
+private void reflejarJugada(String jugada) {
+    // Obtener los botones del GridPane
+    String []jugadaSplit;
+    jugadaSplit=jugada.split(" ");
+    String jugadaEnemy= jugadaSplit [1];
+    jugadaEnemy = jugadaEnemy.replace("boton","botonplayer");
+    System.out.println(jugadaEnemy);
+    List<Button> botones = gridPlayer.getChildren().stream()
+            .filter(node -> node instanceof Button)
+            .map(node -> (Button) node)
+            .collect(Collectors.toList());
 
+    // Desactivar los botones
+
+    botones.forEach(button -> button.setDisable(false));
+  //  for (Button b : botones) {
+   //     if (b.getId().equals(jugadaEnemy))b.setStyle("-fx-background-color: deepskyblue");
+
+    //}
+}
 
 
     // ClientTcpLlista clientTcpLlista = new ClientTcpLlista();
@@ -121,6 +141,7 @@ public class FlotaController implements Initializable {
             else {
                 System.out.println("RecibidaRespuesta con jugada " + response);
                 Platform.runLater(() -> lblResponse.setText(response));
+                reflejarJugada(response);
 
             }
           return length;
