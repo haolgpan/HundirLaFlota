@@ -49,6 +49,7 @@ public class FlotaController implements Initializable {
     private Label counterPush;
     @FXML
     private Text counterPush2;
+    List<Button> botones;
     private int pulsaciones = 0;
 
     private int pulsacionesEnemy = 0;
@@ -94,6 +95,16 @@ public class FlotaController implements Initializable {
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(true));
 }
+    @FXML
+    private void desactivarBotonesColor(ActionEvent event) {
+        List<Button> botones = gridEnemy.getChildren().stream()
+                .filter(Button.class::isInstance)
+                .map(Button.class::cast)
+                .filter(button -> button.getStyle().matches("-fx-background-color: (black|red|deepskyblue)"))
+                .collect(Collectors.toList());
+
+        botones.forEach(button -> button.setDisable(true));
+    }
 //Reflejar Jugada
      @FXML
      private void reflejarJugada(String jugada ,ActionEvent event) {
@@ -105,7 +116,7 @@ public class FlotaController implements Initializable {
              jugadaEnemy = jugadaEnemy.replace("boton", "botonplayer");
             // System.out.println(jugadaEnemy);
              // Obtener los botones del GridPane
-             List<Button> botones = gridPlayer.getChildren().stream()
+              botones = gridPlayer.getChildren().stream()
                      .filter(node -> node instanceof Button)
                      .map(node -> (Button) node)
                      .collect(Collectors.toList());
@@ -147,14 +158,21 @@ public class FlotaController implements Initializable {
                     System.out.println("Turno par numero" + numTurno);
                     turno = true;
                     stopClientTorn();
-                    Platform.runLater(() -> activarBotones(new ActionEvent()));
+                    Platform.runLater(() -> {
+                        activarBotones(new ActionEvent());
+                        desactivarBotonesColor(new ActionEvent());
+                    });
+
 
 
                 } else if (numTurno % 2 != 0 && !turnoPar) {
                     turno = true;
                     stopClientTorn();
                     System.out.println("Turno impar numero" + numTurno);
-                    Platform.runLater(() -> activarBotones(new ActionEvent()));
+                    Platform.runLater(() -> {
+                        activarBotones(new ActionEvent());
+                        desactivarBotonesColor(new ActionEvent());
+                    });
 
 
                 }
@@ -324,7 +342,6 @@ public class FlotaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         desactivarBotones(new ActionEvent());
     }
 }
