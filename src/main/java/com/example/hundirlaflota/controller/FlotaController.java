@@ -38,13 +38,10 @@ public class FlotaController implements Initializable {
     GridPane gridPlayer;
     @FXML
     GridPane gridEnemy;
-
     @FXML
     Circle circleServer;
     @FXML
     Circle circleClient;
-    @FXML
-    private Button ButtonPlayer;
     @FXML
     private Label counterPush;
     @FXML
@@ -57,10 +54,7 @@ public class FlotaController implements Initializable {
 
     private Button botonBlanco;
     String resp = "";
-
-    //boolean turnoPar=false;
     String posicionBarcos = "";
-
 
     // Obtener los botones del GridPane
     @FXML
@@ -122,26 +116,14 @@ public class FlotaController implements Initializable {
             if (response.contains("turno par")) {
                 turnoPar = true;
                 Platform.runLater(() -> lblResponse.setText(response));
-
             } else if (response.equals("blanco")) {
                 botonBlanco.setStyle("-fx-background-color: red");
             } else if (response.matches("[^a-zA-Z]+")) {
-
                 int numTurno = Integer.parseInt(response);
-
-                if (numTurno % 2 == 0 && turnoPar) {
-                    System.out.println("Turno par numero" + numTurno);
+                if ((numTurno % 2 == 0 && turnoPar) || (numTurno % 2 != 0 && !turnoPar)) {
                     turno = true;
                     stopClientTorn();
-                    Platform.runLater(() -> {
-                        activarBotones(new ActionEvent());
-                        desactivarBotonesColor(new ActionEvent());
-                    });
-
-                } else if (numTurno % 2 != 0 && !turnoPar) {
-                    turno = true;
-                    stopClientTorn();
-                    System.out.println("Turno impar numero" + numTurno);
+                    System.out.println("Turno " + (numTurno % 2 == 0 ? "par" : "impar") + " numero " + numTurno);
                     Platform.runLater(() -> {
                         activarBotones(new ActionEvent());
                         desactivarBotonesColor(new ActionEvent());
@@ -153,18 +135,15 @@ public class FlotaController implements Initializable {
             }
             return length;
         }
-
         @Override
         public byte[] getRequest() {
             return String.valueOf(pulsacionesEnemy).getBytes();
         }
         @Override
         public boolean mustContinue(byte[] data) {
-
             return !resp.equals("Correcte");
         }
     };
-
     @FXML
     protected void handleEnemyButtonAction(ActionEvent event) {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
@@ -178,9 +157,7 @@ public class FlotaController implements Initializable {
 
         try {
             String message = nom + " " + numBoton; // crea un mensaje con el valor actualizado del contador
-
             client.send(message.getBytes()); // envía el mensaje al servidor
-
             client.runClient();
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,10 +167,11 @@ public class FlotaController implements Initializable {
     @FXML
     protected void handlePlayerButtonAction(ActionEvent event) throws IOException {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
-        if (button.getId().contains("player")) {
-            posicionBarcos += button.getId() + ",";
+        String buttonId = button.getId();
+        if (buttonId.contains("player")) {
+            posicionBarcos += buttonId + ",";
             --barcos;
-            if(barcos == 6 || barcos == 2 || barcos == 0) ++ contadorBarcos;
+            if (barcos == 6 || barcos == 2 || barcos == 0) ++contadorBarcos;
             button.setStyle("-fx-background-color: black");
             if (contadorBarcos == 3) {
                 desactivarBotonesPlayer(new ActionEvent());
@@ -203,6 +181,7 @@ public class FlotaController implements Initializable {
             }
         }
     }
+
 
 
     @FXML
