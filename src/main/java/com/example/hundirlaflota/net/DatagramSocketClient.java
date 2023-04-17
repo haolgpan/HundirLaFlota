@@ -11,9 +11,7 @@ public abstract class DatagramSocketClient {
     InetAddress serverIP;
     int serverPort;
     DatagramSocket socket;
-
     private Timer timer;
-
     public boolean turno=true;
     public boolean turnoPar=false;
     public boolean gameWin=false;
@@ -59,7 +57,6 @@ public abstract class DatagramSocketClient {
             timer = null;
         }
     }
-
     public void runClient() throws IOException {
 
         byte [] receivedData = new byte[1024];
