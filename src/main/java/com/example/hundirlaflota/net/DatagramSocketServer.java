@@ -24,6 +24,11 @@ public class DatagramSocketServer {
     private ArrayList <String> posicionBarcosJugador1= new ArrayList<>();
     private ArrayList <String> posicionBarcosJugador2= new ArrayList<>();
 
+    //Variables para Controlar ganador
+    private boolean gameOver;
+
+    String ganador="";
+
     //Instàciar el socket
     public void init(int port) throws SocketException {
         socket = new DatagramSocket(port);
@@ -61,7 +66,12 @@ public class DatagramSocketServer {
             else if (nom != null) {
                 String packet1 = new String(processData(packet.getData(), packet.getLength()), 0, packet.getLength());
                 nomSplit = packet1.split(" ");
-                if (nomSplit[0].equals("consultaTurno") || nomSplit[0].equals("envio")) {
+                if (nomSplit[0].equals("consultaTurno")) {
+                    if(gameOver){
+                        String blanco = ganador+ " gameover";
+                        packet = new DatagramPacket(blanco.getBytes(), blanco.getBytes().length, clientIP, clientPort);
+                        socket.send(packet);
+                    }
                     if (encert) {
                         encert = false;
                         String blanco = "blanco";
@@ -71,6 +81,11 @@ public class DatagramSocketServer {
                         packet = new DatagramPacket(String.valueOf(turno).getBytes(), String.valueOf(turno).getBytes().length, clientIP, clientPort);
                         socket.send(packet);
                     }
+                }
+                else if (nomSplit[1].equals("ganador")) {
+                    gameOver=true;
+                    ganador=nomSplit[0];
+
                 }
                 // Si el nom NO es null perque ja hi ha un jugador possem el nom del segon jugador a la variable nom2
                 else if (!nom.equals(nomSplit[0])) {

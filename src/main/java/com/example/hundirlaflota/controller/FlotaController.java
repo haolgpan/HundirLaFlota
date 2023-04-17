@@ -72,6 +72,7 @@ public class FlotaController implements Initializable {
     private int ultimoTurno;
     private int aciertos;
     private String numBoton="";
+    private String responseGanador="";
 
 
 
@@ -193,12 +194,14 @@ public class FlotaController implements Initializable {
             // Aqui si el mensaje es gameover ponemos el texto de perdedor de la partida en el infoGame.
             else if (response.contains("gameover")&&!gameWin){
                 String []splitGanador=response.split(" ");
-                String responseGanador= splitGanador[0];
+                responseGanador= splitGanador[0];
                 stopClientTorn();
                 Platform.runLater(() ->
                         infoGame.setText("You Lose. Winner: "+responseGanador));
                         infoGame.setTextFill(Color.LAVENDER);
-                        lblResponse.setText("Has Perdido");
+                      //  lblResponse.setText("Has Perdido");
+                Platform.runLater(() ->
+                        showFinal(new ActionEvent()));
 
             }
             // Aqui si el mensaje es blanco ponemos el boton en rojo haciendo HIT en el blanco
@@ -216,12 +219,15 @@ public class FlotaController implements Initializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
+                    Platform.runLater(() ->
+                            showFinal(new ActionEvent()));
                     Platform.runLater(() ->
                             infoGame.setText("YOU WIN. Nice Job!"));
                             infoGame.setTextFill(Color.GOLD);
-                            client.gameWin=true;
+                    Platform.runLater(() ->
 
+                            lblResponse.setText("Eres el Ganador"));
+                   client.gameWin=true;
 
 
                 }
@@ -254,7 +260,7 @@ public class FlotaController implements Initializable {
                     System.out.println("Turno impar numero" + numTurno);
                     Platform.runLater(() -> {
                         infoGame.setTextFill(Color.GREEN);
-                        americanos.setDisable(true);
+                        americanos.setVisible(false);
                         infoGame.setText("Tu turno");
                         if (imagenBanderaEnemigo.getImage()==null){
                             imagenBanderaJugador.setImage(new Image(FlotaApp.class.getResource("images/urss.png").toString()));
@@ -449,12 +455,35 @@ public class FlotaController implements Initializable {
             });
             thServer.start();
         }
-
     }
     //------------------------------------------------------------------------------------------------------------------------
     //Funcion que APAGA el programa al darle al MENU ITEM CLOSE
     public void clickClose(ActionEvent actionEvent) {
         System.exit(0);
+    }
+
+    public void showFinal (ActionEvent actionEvent) {
+        Dialog dialog = new Dialog<>();
+        if (client.gameWin) {
+            dialog.setTitle("Eres el Ganador");
+            dialog.setHeaderText("Felicidades " + nom);
+        }
+        else {
+            dialog.setTitle("Has Perdido");
+            dialog.setHeaderText(responseGanador+ " te ha ganado " );
+        }
+            // Crear un botón y agregarlo al diálogo
+        ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        // Mostrar el diálogo
+        Optional result = dialog.showAndWait();
+
+        // Agregar un listener al resultado del diálogo
+        result.ifPresent(pair -> {
+            // Llamar a la función clickClose
+            System.exit(0);
+        });
     }
 
     //------------------------------------------------------------------------------------------------------------------------
