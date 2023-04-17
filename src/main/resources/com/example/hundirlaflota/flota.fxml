@@ -6,9 +6,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
@@ -16,18 +19,60 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="594.0" prefWidth="674.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hundirlaflota.controller.FlotaController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hundirlaflota.controller.FlotaController">
     <children>
-        <VBox alignment="CENTER" maxHeight="592.0" maxWidth="643.0" prefHeight="592.0" prefWidth="643.0" spacing="20.0" AnchorPane.bottomAnchor="-57.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-30.0" AnchorPane.topAnchor="0.0">
+      <ImageView fitHeight="731.0" fitWidth="995.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.2;">
+         <image>
+            <Image url="@images/subfondo.png" />
+         </image>
+      </ImageView>
+        <VBox alignment="CENTER" maxHeight="605.0" maxWidth="806.0" prefHeight="605.0" prefWidth="806.0" spacing="20.0" AnchorPane.bottomAnchor="-5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-6.0" AnchorPane.topAnchor="0.0">
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PulsacionEnemy: " wrappingWidth="112.43701171875" />
-            <Text fx:id="counterPush2" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="24.21630859375" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pulsacion: " />
-            <Label fx:id="counterPush" text="0" />
-            <Pane prefHeight="420.0" prefWidth="643.0">
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Text layoutX="8.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Lanzados: " wrappingWidth="123.43701171875" />
+                        <Label fx:id="counterPush" layoutX="151.0" layoutY="14.0" text="0" />
+                        <Text fx:id="counterPush2" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="10.0" />
+                        <Text layoutX="6.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Recibidos:" wrappingWidth="130.43701171875" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="85.0" prefWidth="572.0" style="-fx-background-color: GRAY;">
+                     <children>
+                        <Label fx:id="infoGame" layoutX="122.0" layoutY="33.0" prefHeight="37.0" prefWidth="278.0" text=" " textFill="#f2a3a3">
+                           <font>
+                              <Font name="Impact" size="24.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="91.0" fitWidth="225.0" layoutX="369.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.1;">
+                           <image>
+                              <Image url="@images/submarinocompleto.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="91.0" fitWidth="286.0" layoutX="10.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.1;">
+                           <image>
+                              <Image url="@images/submarinocompleto.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="59.0" fitWidth="63.0" layoutX="205.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.2;">
+                           <image>
+                              <Image url="@images/usa.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="54.0" fitWidth="72.0" layoutX="292.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.2;">
+                           <image>
+                              <Image url="@images/urss.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+               </children>
+            </HBox>
+            <Pane prefHeight="420.0" prefWidth="798.0">
                <children>
                   <GridPane fx:id="gridEnemy" alignment="CENTER" prefHeight="181.0" prefWidth="189.0">
                     <columnConstraints>
@@ -45,14 +90,12 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
                         <Button fx:id="boton1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="40.0" prefWidth="158.0" GridPane.columnIndex="1" />
                         <Button fx:id="boton5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="39.0" prefWidth="162.0" GridPane.rowIndex="1" />
                         <Button fx:id="boton2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="18.0" prefWidth="88.0" GridPane.columnIndex="2" />
                         <Button fx:id="boton3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="23.0" prefWidth="72.0" GridPane.columnIndex="3" />
                         <Button fx:id="boton4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="24.0" prefWidth="74.0" GridPane.columnIndex="4" />
                         <Button fx:id="boton9" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" prefHeight="20.0" prefWidth="97.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                      <Button fx:id="boton0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction"  />
                         <Button fx:id="boton7" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button fx:id="boton8" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Button fx:id="boton10" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.rowIndex="2" />
@@ -71,9 +114,10 @@
                         <Button fx:id="boton23" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                         <Button fx:id="boton24" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <Button fx:id="boton6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                      <Button fx:id="boton0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEnemyButtonAction" />
                      </children>
                   </GridPane>
-                  <GridPane fx:id="gridPlayer" alignment="CENTER" layoutX="370.0" layoutY="181.0" prefHeight="181.0" prefWidth="189.0">
+                  <GridPane fx:id="gridPlayer" alignment="CENTER" layoutX="502.0" layoutY="219.0" prefHeight="181.0" prefWidth="189.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -89,14 +133,12 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
                         <Button fx:id="botonplayer1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="40.0" prefWidth="158.0" GridPane.columnIndex="1" />
                         <Button fx:id="botonplayer5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="39.0" prefWidth="162.0" GridPane.rowIndex="1" />
                         <Button fx:id="botonplayer2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="18.0" prefWidth="88.0" GridPane.columnIndex="2" />
                         <Button fx:id="botonplayer3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="23.0" prefWidth="72.0" GridPane.columnIndex="3" />
                         <Button fx:id="botonplayer4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="24.0" prefWidth="74.0" GridPane.columnIndex="4" />
                         <Button fx:id="botonplayer9" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" prefHeight="20.0" prefWidth="97.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <Button fx:id="botonplayer0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" />
                         <Button fx:id="botonplayer7" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button fx:id="botonplayer8" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Button fx:id="botonplayer10" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.rowIndex="2" />
@@ -115,28 +157,36 @@
                         <Button fx:id="botonplayer23" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                         <Button fx:id="botonplayer24" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <Button fx:id="botonplayer6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="botonplayer0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" />
                      </children>
                   </GridPane>
-                  <Label fx:id="lblResponse" layoutX="270.0" layoutY="74.0" prefHeight="18.0" prefWidth="308.0" text=" ">
+                  <Label fx:id="lblResponse" layoutX="376.0" layoutY="62.0" prefHeight="62.0" prefWidth="201.0" text=" ">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="Impact" size="14.0" />
                      </font>
                   </Label>
-                  <Text layoutX="302.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del enemigo">
+                  <Text fill="#2e3a86" layoutX="379.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del enemigo">
                      <font>
-                        <Font name="System Italic" size="24.0" />
+                        <Font name="Impact" size="24.0" />
                      </font>
                   </Text>
-                  <Text layoutX="36.0" layoutY="304.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del jugador">
+                  <Text fill="#8a300c" layoutX="151.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del jugador">
                      <font>
-                        <Font name="System Italic" size="24.0" />
+                        <Font name="Impact" size="24.0" />
                      </font>
                   </Text>
-                  <Label fx:id="namePlayer" layoutX="86.0" layoutY="321.0" prefHeight="28.0" prefWidth="144.0" text=" ">
+                  <Label fx:id="namePlayer" layoutX="166.0" layoutY="288.0" prefHeight="58.0" prefWidth="176.0" text=" ">
                      <font>
-                        <Font size="18.0" />
+                        <Font name="Impact" size="18.0" />
                      </font>
                   </Label>
+                  <Button fx:id="americanos" layoutX="606.0" layoutY="124.0" mnemonicParsing="false" onAction="#handleAmericanos" prefHeight="49.0" prefWidth="169.0" text="Elegir Americanos">
+                     <font>
+                        <Font name="Impact" size="18.0" />
+                     </font>
+                  </Button>
+                  <ImageView fx:id="imagenBanderaJugador" fitHeight="79.0" fitWidth="126.0" layoutX="22.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imagenBanderaEnemigo" fitHeight="79.0" fitWidth="134.0" layoutX="606.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
          </children>

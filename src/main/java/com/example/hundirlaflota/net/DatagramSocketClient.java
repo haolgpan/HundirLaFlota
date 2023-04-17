@@ -16,6 +16,7 @@ public abstract class DatagramSocketClient {
 
     public boolean turno=true;
     public boolean turnoPar=false;
+    public boolean gameWin=false;
     public DatagramSocketClient() {
     }
 
@@ -25,6 +26,7 @@ public abstract class DatagramSocketClient {
         socket = new DatagramSocket();
     }
     public void runClientTorn() throws IOException {
+        if (!gameWin) {
             timer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override
@@ -38,9 +40,9 @@ public abstract class DatagramSocketClient {
                         socket.send(packet);
                         packet = new DatagramPacket(receivedData, 1024);
                         socket.receive(packet);
-                        String respuesta = new String( receivedData,0,receivedData.length);
+                        String respuesta = new String(receivedData, 0, receivedData.length);
                         getResponse(packet.getData(), packet.getLength());
-                       // System.out.println("response de la consulta de turno "+respuesta);
+                        // System.out.println("response de la consulta de turno "+respuesta);
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -49,6 +51,7 @@ public abstract class DatagramSocketClient {
             };
             timer.schedule(task, 0, 500);
 
+        }
     }
     public void stopClientTorn() {
         if (timer != null) {

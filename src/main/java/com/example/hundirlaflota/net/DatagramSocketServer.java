@@ -31,7 +31,9 @@ public class DatagramSocketServer {
 
     private String posicionesJug1;
     private String posicionesJug2;
+    private boolean gameOver;
 
+    String ganador="";
 
     private ArrayList <String> posicionBarcosJugador1= new ArrayList<>();
     private ArrayList <String> posicionBarcosJugador2= new ArrayList<>();
@@ -71,13 +73,21 @@ public class DatagramSocketServer {
               //  comptadorClients++;
                 System.out.println(nom);
                 System.out.println(posicionesJug1);
+               // turno++;
             }
             //Si el nom NO es null i ens arriba una consulta del torn enviem el torn al jugador que el demana
 
             else if (nom!=null) {
                 String packet1 = new String(processData(packet.getData(), packet.getLength()), 0, packet.getLength());
                 nomSplit = packet1.split(" ");
-                if (nomSplit[0].equals("consultaTurno")||nomSplit[0].equals("envio")) {
+
+
+                 if (nomSplit[0].equals("consultaTurno")) {
+                    if(gameOver){
+                        String blanco = ganador+ " gameover";
+                        packet = new DatagramPacket(blanco.getBytes(), blanco.getBytes().length, clientIP, clientPort);
+                        socket.send(packet);
+                    }
                     if(encert){
                         encert=false;
                         String blanco = "blanco";
@@ -89,12 +99,33 @@ public class DatagramSocketServer {
                         socket.send(packet);
                     }
                 }
+                else if (nomSplit[1].equals("ganador")) {
+                    gameOver=true;
+                    ganador=nomSplit[0];
+
+                }
                 //Si el nom NO es null perque ja hi ha un jugador possem el nom del segon jugador a la variable nom2
                 else if (!nom.equals(nomSplit[0])) {
                     nom2 = nomSplit[0];
                     posicionesJug2=nomSplit[1];
                     String [] posJug2Array= posicionesJug2.split(",");
-                    for (String p : posJug2Array)posicionBarcosJugador2.add(p);
+                    for (String p : posJug2Array){
+                        if(arrayTirades.size()>0){
+                            String [] primeraJugada = arrayTirades.get(0).split(" ");
+                            String jugadaPrimera= primeraJugada[1].replace("boton", "botonplayer");
+                            System.out.println(jugadaPrimera);
+                           // System.out.println("Nombre de p= " + p + " --ahora, nombre de arrayjugada.get(0) " + jugadaPrimera);
+                            if( jugadaPrimera.equals(p)) {
+                                System.out.println("Nombre de p= " + p + " ahora, nombre de arrayjugada.get(0) " + jugadaPrimera);
+                                encert = true;
+                                String blanco = "blanco";
+                                packet = new DatagramPacket(blanco.getBytes(), blanco.getBytes().length, clientIP, clientPort);
+                                socket.send(packet);
+                            }
+                        }
+                        posicionBarcosJugador2.add(p);
+                    }
+
                     System.out.println(nom2);
                     System.out.println(posicionesJug2);
 
@@ -102,7 +133,7 @@ public class DatagramSocketServer {
             }
             //Continua el fil
 
-            if (arrayTirades.size()>1 && !nomSplit[0].equals("consultaTurno")) {
+            if (arrayTirades.size()>1 && !nomSplit[0].equals("consultaTurno")&& !nomSplit[0].contains("gameover")) {
                 System.out.println("sendEnemy "+ new String(sendingDataEnemy));
                 System.out.println("ArrayJugada rebuda correctament= "+ arrayTirades.get(arrayTirades.size()-2));
                 sendingDataEnemy = arrayTirades.get(arrayTirades.size()-2).getBytes();
@@ -113,7 +144,7 @@ public class DatagramSocketServer {
                 if(nom.equals(nomSplit[0]) ){
                     for(String p :posicionBarcosJugador2){
                         if (p.equals(jugadaArray)){
-                            System.out.println("MaTCH -------------------------"+posicionesJug2);
+                            System.out.println("MaTCH -------------------------"+p);
                             encert=true;
                         }
 
@@ -122,19 +153,22 @@ public class DatagramSocketServer {
                 else if(nom2.equals(nomSplit[0]) ){
                     for(String p :posicionBarcosJugador1){
                         if (p.equals(jugadaArray)){
-                            System.out.println("MaTCH -------------------------"+posicionesJug1);
+                            System.out.println("MaTCH -------------------------"+p);
                             encert=true;
                         }
                     }
                 }
+
+                turno++;
                 packet = new DatagramPacket(sendingDataEnemy,sendingDataEnemy.length,clientIP,clientPort);
                 socket.send(packet);
-                turno++;
             }
-            else if (!nomSplit[0].equals("consultaTurno")&& !nomSplit[1].contains(",")){
+            else if ((!nomSplit[0].equals("consultaTurno")&& !nomSplit[1].contains(","))){
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
                 String response = new String(sendingDataEnemy, 0, sendingDataEnemy.length);
-                System.out.println(response);
+                System.out.println("Marcador response:  "+response);
+                System.out.println(arrayTirades.get(0));
+
                 socket.send(packet);
                 turno++;
             }
@@ -157,8 +191,4 @@ public class DatagramSocketServer {
        // byte[] resposta = ns.comprova(nombre).getBytes();
         return data;
     }
-
-
-
-
 }
