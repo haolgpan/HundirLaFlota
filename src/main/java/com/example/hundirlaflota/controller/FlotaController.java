@@ -72,7 +72,13 @@ public class FlotaController implements Initializable {
     private int ultimoTurno;
     private int aciertos;
     private String numBoton="";
-    // Obtener los botones del GridPane
+
+
+
+    //------------------------------------------------------------------------------------------------------------------------
+    // Activamos el click de los botones del enemigo cuando tenemos el TURNO
+    // Funcion para desactivar los botones del gridPane
+
     @FXML
     private void activarBotones(ActionEvent event) {
         // Obtener los botones del GridPane
@@ -83,7 +89,10 @@ public class FlotaController implements Initializable {
 
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(false));
-    }  @FXML
+    }
+    //------------------------------------------------------------------------------------------------------------------------
+    // Activa el click de los botones del player cuando no tenemos el TURNO
+    @FXML
     private void activarBotonesPlayer(ActionEvent event) {
         // Obtener los botones del GridPane
         List<Button> botones = gridPlayer.getChildren().stream()
@@ -94,6 +103,10 @@ public class FlotaController implements Initializable {
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(false));
     }
+
+
+   //------------------------------------------------------------------------------------------------------------------------
+    // Desactiva el click de los botones del enemigo cuando no tenemos el TURNO
     @FXML
     private void desactivarBotones(ActionEvent event) {
         // Obtener los botones del GridPane
@@ -104,7 +117,10 @@ public class FlotaController implements Initializable {
 
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(true));
-}  @FXML
+}
+    //------------------------------------------------------------------------------------------------------------------------
+// Desactiva el click de los botones del jugador una vez hemos colocado los barcos
+@FXML
     private void desactivarBotonesPlayer(ActionEvent event) {
         // Obtener los botones del GridPane
         List<Button> botones = gridPlayer.getChildren().stream()
@@ -115,6 +131,10 @@ public class FlotaController implements Initializable {
         // Desactivar los botones
         botones.forEach(button -> button.setDisable(true));
 }
+
+    //------------------------------------------------------------------------------------------------------------------------
+// Funcion que sirve para desactivar el click de los botones que hemos pulsado con algun momento, ya sea que hemos colocado barco,
+// o bien que han sido pulsados por el enemigo.
     @FXML
     private void desactivarBotonesColor(ActionEvent event) {
         List<Button> botones = gridEnemy.getChildren().stream()
@@ -125,12 +145,15 @@ public class FlotaController implements Initializable {
 
         botones.forEach(button -> button.setDisable(true));
     }
-//Reflejar Jugada
+
+    //------------------------------------------------------------------------------------------------------------------------
+      //Reflejar Jugada del enemigo en nuestro panel y nos pone rojo el boton en el que hayan hecho contacto
      @FXML
      private void reflejarJugada(String jugada ,ActionEvent event) {
     // Obtener los botones del GridPane
          if (!jugada.equals("consultaTurno")&&!jugada.contains("boton30") && !jugada.contains("gameover")) {
              String[] jugadaSplit;
+
              jugadaSplit = jugada.split(" ");
              String jugadaEnemy = jugadaSplit[1];
              jugadaEnemy = jugadaEnemy.replace("boton", "botonplayer");
@@ -152,35 +175,41 @@ public class FlotaController implements Initializable {
 }
 
 
-    // ClientTcpLlista clientTcpLlista = new ClientTcpLlista();
+    //------------------------------------------------------------------------------------------------------------------------
+    //Creamos el Cliente y sobrescribimos los metodos para que reaccione a la respuesta del servidor
+    //Inspirado en el adivinaFX del jordi en github
     DatagramSocketClient client = new DatagramSocketClient() {
         @Override
         public int getResponse(byte[] data, int length) {
             resp = new String(data, 0, length);
             String response = new String(data, 0, length);
+            //Aqui recibimos la primera respuesta al enviar el boton de americanos y ponemos el turno a par
             if (response.contains("turno par")) {
                 turnoPar = true;
-                //
-                // turno=true;
                 Platform.runLater(() -> lblResponse.setText(response));
 
 
             }
+            // Aqui si el mensaje es gameover ponemos el texto de perdedor de la partida en el infoGame.
             else if (response.contains("gameover")&&!gameWin){
                 String []splitGanador=response.split(" ");
                 String responseGanador= splitGanador[0];
-
-                //stopClientTorn();
+                stopClientTorn();
                 Platform.runLater(() ->
-                        infoGame.setText("Perdedor ha Ganado"+responseGanador));
+                        infoGame.setText("You Lose. Winner: "+responseGanador));
                         infoGame.setTextFill(Color.LAVENDER);
-                      //  lblResponse.setText("Has Perdido");
+                        lblResponse.setText("Has Perdido");
 
             }
+            // Aqui si el mensaje es blanco ponemos el boton en rojo haciendo HIT en el blanco
             else if (response.equals("blanco")){
                 aciertos++;
+                Platform.runLater(() ->   counterPush.setText(String.valueOf(aciertos)));
+
+
                 botonBlanco.setStyle("-fx-background-color: red");
-                if(aciertos==2) {
+                //Si el numero de aciertos es igual al numero de casillas. Entonces  hemos ganado
+                if(aciertos==4) {
                    try {
                         String message =  nom + " ganador"; // crea un mensaje con el valor actualizado del contador
                         client.send(message.getBytes()); // envía el mensaje al servidor
@@ -189,7 +218,7 @@ public class FlotaController implements Initializable {
                     }
 
                     Platform.runLater(() ->
-                            infoGame.setText("Ganador"));
+                            infoGame.setText("YOU WIN. Nice Job!"));
                             infoGame.setTextFill(Color.GOLD);
                             client.gameWin=true;
 
@@ -199,6 +228,8 @@ public class FlotaController implements Initializable {
 
             }
 
+            //Aqui recibimos el numero de turno y lo gestionamos para saber si es nuesrtro turno o NO
+            // Tambien comprobamos si la partida se ha acabado para no actualizar mas el turno
             else if (response.matches("[^a-zA-Z]+")) {
 
                 int numTurno = Integer.parseInt(response);
@@ -217,7 +248,7 @@ public class FlotaController implements Initializable {
 
 
 
-                } else if (numTurno % 2 != 0 && !turnoPar && !gameWin) {
+                } else if (numTurno % 2 != 0 && !turnoPar && numTurno!=ultimoTurno && !gameWin) {
                     turno = true;
                     stopClientTorn();
                     System.out.println("Turno impar numero" + numTurno);
@@ -232,16 +263,15 @@ public class FlotaController implements Initializable {
                         activarBotones(new ActionEvent());
                         desactivarBotonesColor(new ActionEvent());
                     });
-
-
                 }
                 ultimoTurno=numTurno;
             }
             else {
                // System.out.println("RecibidaRespuesta con jugada " + response);
-                Platform.runLater(() -> lblResponse.setText(response));
+                String []splitEnemy=response.split(" ");
+                String responseEnemy= splitEnemy[0];
+                Platform.runLater(() -> lblResponse.setText(responseEnemy));
                 reflejarJugada(response,new ActionEvent());
-
             }
           return length;
 
@@ -260,6 +290,8 @@ public class FlotaController implements Initializable {
     };
 
 
+    //------------------------------------------------------------------------------------------------------------------------
+    //Handler que envia el boton pulsado al servidor y pinta el boton de azul hasta recibir confirmación si se ha hecho blanco
     @FXML
     protected void handleEnemyButtonAction(ActionEvent event) {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
@@ -271,21 +303,22 @@ public class FlotaController implements Initializable {
         // Cambiamos el texto del turno
         infoGame.setTextFill(Color.RED);
         infoGame.setText("Turno del ENEMIGO");
-
-
         pulsacionesEnemy++;
         counterPush2.setText(String.valueOf(pulsacionesEnemy));
 
         try {
+
             String message = nom+" " + numBoton; // crea un mensaje con el valor actualizado del contador
-
             client.send(message.getBytes()); // envía el mensaje al servidor
-
             client.runClient();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //handler para enviar los botones pulsados en nuestro tablero cuando sean los requeridos
   @FXML
     protected void handlePlayerButtonAction(ActionEvent event) throws IOException {
       Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
@@ -293,31 +326,37 @@ public class FlotaController implements Initializable {
           posicionBarcos+= button.getId()+",";
           contadorBarcos++;
           button.setStyle("-fx-background-color: black");
-          if(contadorBarcos==2){
+          if(contadorBarcos==4){
               desactivarBotonesPlayer(new ActionEvent());
               posicionBarcos= posicionBarcos.substring(0,posicionBarcos.length()-1);
               americanos.setDisable(false);
               System.out.println(posicionBarcos.toString());
               client.send(posicionBarcos.getBytes());
-          }
+              infoGame.setText("ELEGIR AMERICANOS");
+              infoGame.setTextFill(Color.BLACK);
 
+          }
       }
-  } @FXML
+  }
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion que al presionar americanos nos selecciona ese equipo y espera la respuesta del enemigo
+  @FXML
     protected void handleAmericanos(ActionEvent event) throws IOException {
     //  Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
         desactivarBotones(new ActionEvent());
         String envio =  nom + " boton30";
         botonBlanco=(Button) event.getSource();
         americanos.setVisible(false);
-        activarBotones(new ActionEvent());
         infoGame.setText("Turno del ENEMIGO");
+        infoGame.setTextFill(Color.RED);
         imagenBanderaJugador.setImage(new Image(FlotaApp.class.getResource("images/usa.png").toString()));
         imagenBanderaEnemigo.setImage(new Image(FlotaApp.class.getResource("images/urss.png").toString()));
         client.send(envio.getBytes());
 
   }
 
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion para conectarse con unos parametros determinados al servidor
     @FXML
         public void menuItemConnection(ActionEvent actionEvent) {
 
@@ -365,10 +404,12 @@ public class FlotaController implements Initializable {
                     client.init(result.get().getKey(), result.get().getValue());
                     Thread.sleep(500);
                     circleClient.setFill(Color.BLUE);
-                    lblResponse.setText("connectat com "+ nom+ ". Pulsa un boton para turno");
+                    lblResponse.setText("connectat com "+ nom);
                     infoGame.setText(" ");
                     namePlayer.setText(nom);
                     activarBotonesPlayer(new ActionEvent());
+                    infoGame.setText("COLOCAR 6 BOTONES");
+                    infoGame.setTextFill(Color.PURPLE);
 
                 } catch (SocketException | UnknownHostException e) {
                     e.printStackTrace();
@@ -377,11 +418,16 @@ public class FlotaController implements Initializable {
                 }
             }
         }
+
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion que levanta el servidor en el puerto determinado
     public void menuItemActiveServer(ActionEvent actionEvent) {
         showConfigServer();
         circleServer.setFill(Color.BLUE);
 
     }
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion que CONECTA con el servidor en la direccion, el puerto  y el nombre de usuario introducidos
     public void showConfigServer() {
         TextInputDialog dialog = new TextInputDialog("5555");
         dialog.setTitle("Config Server");
@@ -405,16 +451,14 @@ public class FlotaController implements Initializable {
         }
 
     }
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion que APAGA el programa al darle al MENU ITEM CLOSE
     public void clickClose(ActionEvent actionEvent) {
         System.exit(0);
     }
-    @FXML
-    protected void handleButtonAction(ActionEvent event) {
-        pulsaciones++;
 
-        counterPush.setText(String.valueOf(pulsaciones));
-    }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funciones INITIALIZES
     public void initialize() {
         desactivarBotonesPlayer(new ActionEvent());
         counterPush.setText(String.valueOf(pulsaciones));
@@ -424,6 +468,8 @@ public class FlotaController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         desactivarBotones(new ActionEvent());
         desactivarBotonesPlayer(new ActionEvent());
+        infoGame.setText("CONECTARSE AL SERVIDOR");
+        infoGame.setTextFill(Color.BEIGE);
         americanos.setDisable(true);
 
     }

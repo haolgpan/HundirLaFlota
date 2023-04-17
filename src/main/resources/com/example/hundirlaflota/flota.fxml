@@ -35,15 +35,15 @@
                <children>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="8.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Lanzados: " wrappingWidth="123.43701171875" />
+                        <Text layoutX="8.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Acertados: " wrappingWidth="123.43701171875" />
                         <Label fx:id="counterPush" layoutX="151.0" layoutY="14.0" text="0" />
                         <Text fx:id="counterPush2" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="10.0" />
-                        <Text layoutX="6.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Recibidos:" wrappingWidth="130.43701171875" />
+                        <Text layoutX="6.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Lanzados:" wrappingWidth="130.43701171875" />
                      </children>
                   </Pane>
                   <Pane prefHeight="85.0" prefWidth="572.0" style="-fx-background-color: GRAY;">
                      <children>
-                        <Label fx:id="infoGame" layoutX="122.0" layoutY="33.0" prefHeight="37.0" prefWidth="278.0" text=" " textFill="#f2a3a3">
+                        <Label fx:id="infoGame" layoutX="122.0" layoutY="33.0" prefHeight="42.0" prefWidth="426.0" text=" " textFill="#f2a3a3">
                            <font>
                               <Font name="Impact" size="24.0" />
                            </font>
