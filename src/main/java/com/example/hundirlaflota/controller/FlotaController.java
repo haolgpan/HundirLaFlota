@@ -185,7 +185,6 @@ public class FlotaController implements Initializable {
                    try {
                         String message =  nom + " ganador"; // crea un mensaje con el valor actualizado del contador
                         client.send(message.getBytes()); // envía el mensaje al servidor
-                       // client.runClient();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
