@@ -181,14 +181,12 @@ public class FlotaController implements Initializable {
                 aciertos++;
                 botonBlanco.setStyle("-fx-background-color: red");
                 if(aciertos==2) {
-
                    try {
                         String message =  nom + " ganador"; // crea un mensaje con el valor actualizado del contador
                         client.send(message.getBytes()); // envía el mensaje al servidor
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
                     Platform.runLater(() ->
                             infoGame.setText("Ganador"));
