@@ -32,7 +32,6 @@ public class DatagramSocketServer {
         String[] nomSplit = new String[0];
         InetAddress clientIP;
         int clientPort;
-
         while (!acabat) {
             DatagramPacket packet = new DatagramPacket(receivingData, 1024);
             socket.receive(packet);
@@ -86,22 +85,16 @@ public class DatagramSocketServer {
             }
             //Continua el fil
             if (arrayTirades.size() > 1 && !nomSplit[0].equals("consultaTurno")) {
-                System.out.println("sendEnemy " + new String(sendingDataEnemy));
-                System.out.println("ArrayJugada rebuda correctament= " + arrayTirades.get(arrayTirades.size() - 2));
                 sendingDataEnemy = arrayTirades.get(arrayTirades.size() - 2).getBytes();
                 // Comprobacion de disparo certero
                 String jugadaAnterior = arrayTirades.get(arrayTirades.size() - 1).split(" ")[1].replace("boton", "botonplayer");
                 ArrayList<String> posicionBarcosJugador;
-                String posicionesJugador;
                 if (nom.equals(nomSplit[0])) {
                     posicionBarcosJugador = posicionBarcosJugador2;
-                    posicionesJugador = posicionesJug2;
                 } else if (nom2.equals(nomSplit[0])) {
                     posicionBarcosJugador = posicionBarcosJugador1;
-                    posicionesJugador = posicionesJug1;
                 } else {
                     posicionBarcosJugador = new ArrayList<>();
-                    posicionesJugador = "";
                 }
                 if (posicionBarcosJugador.contains(jugadaAnterior)) {
                     encert = true;

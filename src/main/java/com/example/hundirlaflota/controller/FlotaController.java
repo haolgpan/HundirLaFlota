@@ -99,7 +99,6 @@ public class FlotaController implements Initializable {
                 .filter(node -> node instanceof Button)
                 .map(node -> (Button) node)
                 .collect(Collectors.toList());
-
         botones.forEach(button -> button.setDisable(true));
     }
 
@@ -205,9 +204,7 @@ public class FlotaController implements Initializable {
                     Platform.runLater(() ->
                             lblResponse.setText("Eres el Ganador"));
                     client.gameWin = true;
-
                 }
-
             }
             //Aqui recibimos el numero de turno y lo gestionamos para saber si es nuesrtro turno o NO
             // Tambien comprobamos si la partida se ha acabado para no actualizar mas el turno
@@ -250,19 +247,15 @@ public class FlotaController implements Initializable {
             }
             return length;
         }
-
         @Override
         public byte[] getRequest() {
             return String.valueOf(pulsacionesEnemy).getBytes();
         }
-
         @Override
         public boolean mustContinue(byte[] data) {
-
             return !resp.equals("Correcte");
         }
     };
-
 
     //------------------------------------------------------------------------------------------------------------------------
     //Handler que envia el boton pulsado al servidor y pinta el boton de azul hasta recibir confirmación si se ha hecho blanco
@@ -279,13 +272,10 @@ public class FlotaController implements Initializable {
         infoGame.setText("Turno del ENEMIGO");
         pulsacionesEnemy++;
         counterPush2.setText(String.valueOf(pulsacionesEnemy));
-
         try {
-
             String message = nom + " " + numBoton; // crea un mensaje con el valor actualizado del contador
             client.send(message.getBytes()); // envía el mensaje al servidor
             client.runClient();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -353,11 +343,8 @@ public class FlotaController implements Initializable {
         gridPane.add(txtIp, 1, 1);
         gridPane.add(new Label("Port:"), 0, 2);
         gridPane.add(txtPort, 1, 2);
-
         dialog.getDialogPane().setContent(gridPane);
-
         Platform.runLater(txtName::requestFocus);
-
         dialog.setResultConverter(dButton -> {
             if (dButton == conButton) {
                 nom = txtName.getText();
@@ -366,7 +353,6 @@ public class FlotaController implements Initializable {
             }
             return null;
         });
-
         Optional<Pair<String, Integer>> result = dialog.showAndWait();
 
         if (result.isPresent()) {

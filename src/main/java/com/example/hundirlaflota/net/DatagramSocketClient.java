@@ -23,7 +23,7 @@ public abstract class DatagramSocketClient {
         serverPort = port;
         socket = new DatagramSocket();
     }
-    public void runClientTorn() throws IOException {
+    public void runClientTorn() {
         if (!gameWin) {
             timer = new Timer();
             TimerTask task = new TimerTask() {
@@ -38,7 +38,6 @@ public abstract class DatagramSocketClient {
                         socket.send(packet);
                         packet = new DatagramPacket(receivedData, 1024);
                         socket.receive(packet);
-                        String respuesta = new String(receivedData, 0, receivedData.length);
                         getResponse(packet.getData(), packet.getLength());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -71,11 +70,8 @@ public abstract class DatagramSocketClient {
 
     //Resta de conversa que se li envia al server
     public abstract int getResponse(byte[] data, int length);
-
     //primer missatge que se li envia al server
     public abstract byte[] getRequest();
-
     //Si se li diu adeu al server el client es desconnecta
     public abstract boolean mustContinue(byte [] data);
-
 }
