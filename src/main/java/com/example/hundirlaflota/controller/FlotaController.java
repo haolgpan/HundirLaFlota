@@ -56,69 +56,31 @@ public class FlotaController implements Initializable {
     private Button botonBlanco;
     @FXML
     private Button americanos;
-    private String enemigo = "",responseGanador = "", numBoton = "", posicionBarcos = "", resp = "";
+    private String enemigo = "", responseGanador = "", numBoton = "", posicionBarcos = "", resp = "";
+
+
 
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Activamos el click de los botones del enemigo cuando tenemos el TURNO
-    // Funcion para desactivar los botones del gridPane
-
+    // Funcion para activar y  desactivar los botones de todos los gridPane
     @FXML
-    private void activarBotones(ActionEvent event) {
+    private void panelBotones(ActionEvent event, boolean estado, GridPane grid) {
         // Obtener los botones del GridPane
-        List<Button> botones = gridEnemy.getChildren().stream()
+        List<Button> botones = grid.getChildren().stream()
                 .filter(node -> node instanceof Button)
                 .map(node -> (Button) node)
                 .collect(Collectors.toList());
-
-        // Desactivar los botones
-        botones.forEach(button -> button.setDisable(false));
+        if (estado) {
+            // Activar los botones
+            botones.forEach(button -> button.setDisable(true));
+        } else
+            // Desactivar los botones
+            botones.forEach(button -> button.setDisable(false));
     }
 
     //------------------------------------------------------------------------------------------------------------------------
-    // Activa el click de los botones del player cuando no tenemos el TURNO
-    @FXML
-    private void activarBotonesPlayer(ActionEvent event) {
-        // Obtener los botones del GridPane
-        List<Button> botones = gridPlayer.getChildren().stream()
-                .filter(node -> node instanceof Button)
-                .map(node -> (Button) node)
-                .collect(Collectors.toList());
-
-        // Desactivar los botones
-        botones.forEach(button -> button.setDisable(false));
-    }
-
-
-    //------------------------------------------------------------------------------------------------------------------------
-    // Desactiva el click de los botones del enemigo cuando no tenemos el TURNO
-    @FXML
-    private void desactivarBotones(ActionEvent event) {
-        // Obtener los botones del GridPane
-        List<Button> botones = gridEnemy.getChildren().stream()
-                .filter(node -> node instanceof Button)
-                .map(node -> (Button) node)
-                .collect(Collectors.toList());
-        botones.forEach(button -> button.setDisable(true));
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-// Desactiva el click de los botones del jugador una vez hemos colocado los barcos
-    @FXML
-    private void desactivarBotonesPlayer(ActionEvent event) {
-        // Obtener los botones del GridPane
-        List<Button> botones = gridPlayer.getChildren().stream()
-                .filter(node -> node instanceof Button)
-                .map(node -> (Button) node)
-                .collect(Collectors.toList());
-
-        // Desactivar los botones
-        botones.forEach(button -> button.setDisable(true));
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------
-// Funcion que sirve para desactivar el click de los botones que hemos pulsado con algun momento, ya sea que hemos colocado barco,
-// o bien que han sido pulsados por el enemigo.
+    // Funcion que sirve para desactivar el click de los botones que hemos pulsado con algun momento, ya sea que hemos colocado barco,
+    // o bien que han sido pulsados por el enemigo.
     @FXML
     private void desactivarBotonesColor(ActionEvent event) {
         List<Button> botones = gridEnemy.getChildren().stream()
@@ -129,7 +91,6 @@ public class FlotaController implements Initializable {
 
         botones.forEach(button -> button.setDisable(true));
     }
-
     //------------------------------------------------------------------------------------------------------------------------
     //Reflejar Jugada del enemigo en nuestro panel y nos pone rojo el boton en el que hayan hecho contacto
     @FXML
@@ -168,7 +129,6 @@ public class FlotaController implements Initializable {
             if (response.contains("turno par")) {
                 turnoPar = true;
                 Platform.runLater(() -> lblResponse.setText(response));
-
 
             }
             // Aqui si el mensaje es gameover ponemos el texto de perdedor de la partida en el infoGame.
@@ -218,7 +178,7 @@ public class FlotaController implements Initializable {
                         infoGame.setTextFill(Color.GREEN);
                         infoGame.setText("Tu turno");
                         americanos.setDisable(true);
-                        activarBotones(new ActionEvent());
+                        panelBotones(new ActionEvent(), true, gridEnemy);
                         desactivarBotonesColor(new ActionEvent());
                     });
 
@@ -233,7 +193,7 @@ public class FlotaController implements Initializable {
                             imagenBanderaJugador.setImage(new Image(FlotaApp.class.getResource("images/urss.png").toString()));
                             imagenBanderaEnemigo.setImage(new Image(FlotaApp.class.getResource("images/usa.png").toString()));
                         }
-                        activarBotones(new ActionEvent());
+                        panelBotones(new ActionEvent(), true, gridEnemy);
                         desactivarBotonesColor(new ActionEvent());
                     });
                 }
@@ -247,10 +207,12 @@ public class FlotaController implements Initializable {
             }
             return length;
         }
+
         @Override
         public byte[] getRequest() {
             return String.valueOf(pulsacionesEnemy).getBytes();
         }
+
         @Override
         public boolean mustContinue(byte[] data) {
             return !resp.equals("Correcte");
@@ -266,7 +228,7 @@ public class FlotaController implements Initializable {
         numBoton = button.getId(); // obtiene el número del botón a partir del ID
         botonBlanco = button;
         // Desactivar los botones
-        desactivarBotones(event);
+        panelBotones(event, false, gridEnemy);
         // Cambiamos el texto del turno
         infoGame.setTextFill(Color.RED);
         infoGame.setText("Turno del ENEMIGO");
@@ -291,7 +253,7 @@ public class FlotaController implements Initializable {
             contadorBarcos++;
             button.setStyle("-fx-background-color: black");
             if (contadorBarcos == 4) {
-                desactivarBotonesPlayer(new ActionEvent());
+                panelBotones(new ActionEvent(), false, gridPlayer);
                 posicionBarcos = posicionBarcos.substring(0, posicionBarcos.length() - 1);
                 americanos.setDisable(false);
                 client.send(posicionBarcos.getBytes());
@@ -305,7 +267,7 @@ public class FlotaController implements Initializable {
     //Funcion que al presionar americanos nos selecciona ese equipo y espera la respuesta del enemigo
     @FXML
     protected void handleAmericanos(ActionEvent event) throws IOException {
-        desactivarBotones(new ActionEvent());
+        panelBotones(new ActionEvent(), false, gridEnemy);
         String envio = nom + " boton30";
         botonBlanco = (Button) event.getSource();
         americanos.setVisible(false);
@@ -314,7 +276,6 @@ public class FlotaController implements Initializable {
         imagenBanderaJugador.setImage(new Image(FlotaApp.class.getResource("images/usa.png").toString()));
         imagenBanderaEnemigo.setImage(new Image(FlotaApp.class.getResource("images/urss.png").toString()));
         client.send(envio.getBytes());
-
     }
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -327,16 +288,13 @@ public class FlotaController implements Initializable {
         dialog.setHeaderText("Dades per la connexió al servidor");
         ButtonType conButton = new ButtonType("Connect", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(conButton, ButtonType.CANCEL);
-
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(20, 150, 10, 10));
-
         TextField txtName = new TextField("player1");
         TextField txtIp = new TextField("127.0.0.1");
         TextField txtPort = new TextField("5555");
-
         gridPane.add(new Label("Nom:"), 0, 0);
         gridPane.add(txtName, 1, 0);
         gridPane.add(new Label("IP:"), 0, 1);
@@ -354,7 +312,6 @@ public class FlotaController implements Initializable {
             return null;
         });
         Optional<Pair<String, Integer>> result = dialog.showAndWait();
-
         if (result.isPresent()) {
             try {
                 client.init(result.get().getKey(), result.get().getValue());
@@ -363,10 +320,9 @@ public class FlotaController implements Initializable {
                 lblResponse.setText("Esperando Enemigo");
                 infoGame.setText(" ");
                 namePlayer.setText(nom);
-                activarBotonesPlayer(new ActionEvent());
+                panelBotones(new ActionEvent(), true, gridPlayer);
                 infoGame.setText("COLOCA 3 BARCOS DE 2 PCS.");
                 infoGame.setTextFill(Color.PURPLE);
-
             } catch (SocketException | UnknownHostException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -382,7 +338,6 @@ public class FlotaController implements Initializable {
         circleServer.setFill(Color.BLUE);
 
     }
-
     //------------------------------------------------------------------------------------------------------------------------
     //Funcion que CONECTA con el servidor en la direccion, el puerto  y el nombre de usuario introducidos
     public void showConfigServer() {
@@ -448,14 +403,14 @@ public class FlotaController implements Initializable {
     //------------------------------------------------------------------------------------------------------------------------
     //Funciones INITIALIZES
     public void initialize() {
-        desactivarBotonesPlayer(new ActionEvent());
+        panelBotones(new ActionEvent(), false, gridPlayer);
         counterPush.setText(String.valueOf(pulsaciones));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        desactivarBotones(new ActionEvent());
-        desactivarBotonesPlayer(new ActionEvent());
+        panelBotones(new ActionEvent(), false, gridEnemy);
+        panelBotones(new ActionEvent(), false, gridPlayer);
         infoGame.setText("CONECTARSE AL SERVIDOR");
         infoGame.setTextFill(Color.WHITE);
         americanos.setDisable(true);
