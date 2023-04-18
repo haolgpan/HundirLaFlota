@@ -38,36 +38,30 @@ public class FlotaController implements Initializable {
     TextField txtNum;
     private String nom;
     @FXML
-    GridPane gridPlayer;
+    private GridPane gridPlayer;
     @FXML
-    GridPane gridEnemy;
+    private GridPane gridEnemy;
     @FXML
-    ImageView imagenBanderaEnemigo;
+    private ImageView imagenBanderaEnemigo;
     @FXML
-    ImageView imagenBanderaJugador;
+    private ImageView imagenBanderaJugador;
 
     @FXML
     Circle circleServer;
     @FXML
     Circle circleClient;
     @FXML
-    private Button ButtonPlayer;
-    @FXML
     private Label counterPush;
     @FXML
     private Text counterPush2;
     List<Button> botones;
     private int pulsaciones = 0;
-
     private int pulsacionesEnemy = 0;
     private int contadorBarcos = 0;
-
     private Button botonBlanco;
 @FXML
     private Button americanos;
     String resp = "";
-
-   //boolean turnoPar=false;
     String posicionBarcos="";
     private int ultimoTurno;
     private int aciertos;
@@ -463,16 +457,15 @@ public class FlotaController implements Initializable {
     public void clickClose(ActionEvent actionEvent) {
         System.exit(0);
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    //Funcion que MUESTRA el Dialogo de FIN DE PARTIDA, llamará a clickClose() para cerrar programa al presionar el botón OK
     public void showFinal (ActionEvent actionEvent) {
         Dialog dialog = new Dialog<>();
         // Obtener el panel del diálogo
         DialogPane dialogPane = dialog.getDialogPane();
-
         // Establecer el estilo CSS del panel para cambiar la fuente y el tamaño
         dialogPane.setStyle("-fx-font-family: Impact; -fx-font-size: 24px;");
-
-
+        //Comprobar booleano para indicar el texto
         if (client.gameWin) {
             dialog.setTitle("Eres el Ganador");
             dialog.setHeaderText("Felicidades " + nom);
@@ -484,35 +477,30 @@ public class FlotaController implements Initializable {
             dialog.setContentText("Has sido aplastado por el enemigo");
 
         }
-            // Crear un botón y agregarlo al diálogo
+        // Crear un botón y agregarlo al diálogo
         ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
-
         // Mostrar el diálogo
         Optional result = dialog.showAndWait();
-
         // Agregar un listener al resultado del diálogo
         result.ifPresent(pair -> {
             // Llamar a la función clickClose
             System.exit(0);
         });
     }
-
     //------------------------------------------------------------------------------------------------------------------------
     //Funciones INITIALIZES
     public void initialize() {
         desactivarBotonesPlayer(new ActionEvent());
         counterPush.setText(String.valueOf(pulsaciones));
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         desactivarBotones(new ActionEvent());
         desactivarBotonesPlayer(new ActionEvent());
         infoGame.setText("CONECTARSE AL SERVIDOR");
-        infoGame.setTextFill(Color.BEIGE);
+        infoGame.setTextFill(Color.WHITE);
         americanos.setDisable(true);
-
     }
 }
 
