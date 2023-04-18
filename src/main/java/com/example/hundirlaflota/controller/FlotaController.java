@@ -73,6 +73,7 @@ public class FlotaController implements Initializable {
     private int aciertos;
     private String numBoton="";
     private String responseGanador="";
+    private String enemigo="";
 
 
 
@@ -276,6 +277,7 @@ public class FlotaController implements Initializable {
                // System.out.println("RecibidaRespuesta con jugada " + response);
                 String []splitEnemy=response.split(" ");
                 String responseEnemy= splitEnemy[0];
+                if(enemigo.equals(""))enemigo=responseEnemy;
                 Platform.runLater(() -> lblResponse.setText(responseEnemy));
                 reflejarJugada(response,new ActionEvent());
             }
@@ -410,11 +412,11 @@ public class FlotaController implements Initializable {
                     client.init(result.get().getKey(), result.get().getValue());
                     Thread.sleep(500);
                     circleClient.setFill(Color.BLUE);
-                    lblResponse.setText("connectat com "+ nom);
+                    lblResponse.setText("Esperando Enemigo");
                     infoGame.setText(" ");
                     namePlayer.setText(nom);
                     activarBotonesPlayer(new ActionEvent());
-                    infoGame.setText("COLOCAR 6 BOTONES");
+                    infoGame.setText("COLOCA 3 BARCOS DE 2 PCS.");
                     infoGame.setTextFill(Color.PURPLE);
 
                 } catch (SocketException | UnknownHostException e) {
@@ -464,13 +466,23 @@ public class FlotaController implements Initializable {
 
     public void showFinal (ActionEvent actionEvent) {
         Dialog dialog = new Dialog<>();
+        // Obtener el panel del diálogo
+        DialogPane dialogPane = dialog.getDialogPane();
+
+        // Establecer el estilo CSS del panel para cambiar la fuente y el tamaño
+        dialogPane.setStyle("-fx-font-family: Impact; -fx-font-size: 24px;");
+
+
         if (client.gameWin) {
             dialog.setTitle("Eres el Ganador");
             dialog.setHeaderText("Felicidades " + nom);
+            dialog.setContentText("Has ganado a "+enemigo.toUpperCase()+ " con mucha superioridad");
         }
         else {
-            dialog.setTitle("Has Perdido");
+            dialog.setTitle("Has Perdido "+ nom);
             dialog.setHeaderText(responseGanador+ " te ha ganado " );
+            dialog.setContentText("Has sido aplastado por el enemigo");
+
         }
             // Crear un botón y agregarlo al diálogo
         ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
