@@ -72,12 +72,12 @@ public class FlotaController implements Initializable {
                 .collect(Collectors.toList());
         if (estado) {
             // Activar los botones
-            botones.forEach(button -> button.setDisable(true));
-        } else
-            // Desactivar los botones
             botones.forEach(button -> button.setDisable(false));
+            //Desactivar botones
+        } else {
+            botones.forEach(button -> button.setDisable(true));
+        }
     }
-
     //------------------------------------------------------------------------------------------------------------------------
     // Funcion que sirve para desactivar el click de los botones que hemos pulsado con algun momento, ya sea que hemos colocado barco,
     // o bien que han sido pulsados por el enemigo.
