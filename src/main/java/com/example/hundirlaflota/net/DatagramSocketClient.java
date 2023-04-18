@@ -40,15 +40,12 @@ public abstract class DatagramSocketClient {
                         socket.receive(packet);
                         String respuesta = new String(receivedData, 0, receivedData.length);
                         getResponse(packet.getData(), packet.getLength());
-                        // System.out.println("response de la consulta de turno "+respuesta);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             };
             timer.schedule(task, 0, 500);
-
         }
     }
     public void stopClientTorn() {
@@ -64,7 +61,6 @@ public abstract class DatagramSocketClient {
         socket.receive(packet);
         getResponse(packet.getData(), packet.getLength());
     }
-
     //MetodeSend Personalitzat
     public void send(byte[] data) throws IOException {
         DatagramPacket packet = new DatagramPacket(data, data.length, serverIP, serverPort);
