@@ -118,7 +118,7 @@ public class FlotaController implements Initializable {
             Button miBoton = (Button) gridPlayer.lookup("#" + jugadaEnemy);
             if (miBoton.getStyle().equals("-fx-background-color: black")) {
                 miBoton.setStyle("-fx-background-color: red");
-                animateButtonCircle(botonBlanco, Color.YELLOW,1);
+                animateButtonCircle(miBoton, Color.YELLOW,1);
 
 
 
