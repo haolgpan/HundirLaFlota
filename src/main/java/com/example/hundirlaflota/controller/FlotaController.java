@@ -3,11 +3,15 @@ package com.example.hundirlaflota.controller;
 import com.example.hundirlaflota.FlotaApp;
 import com.example.hundirlaflota.net.DatagramSocketClient;
 import com.example.hundirlaflota.net.DatagramSocketServer;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 
@@ -59,8 +64,6 @@ public class FlotaController implements Initializable {
     private String enemigo = "", responseGanador = "", numBoton = "", posicionBarcos = "", resp = "";
 
 
-
-
     //------------------------------------------------------------------------------------------------------------------------
     // Funcion para activar y  desactivar los botones de todos los gridPane
     @FXML
@@ -78,6 +81,7 @@ public class FlotaController implements Initializable {
             botones.forEach(button -> button.setDisable(true));
         }
     }
+
     //------------------------------------------------------------------------------------------------------------------------
     // Funcion que sirve para desactivar el click de los botones que hemos pulsado con algun momento, ya sea que hemos colocado barco,
     // o bien que han sido pulsados por el enemigo.
@@ -91,6 +95,7 @@ public class FlotaController implements Initializable {
 
         botones.forEach(button -> button.setDisable(true));
     }
+
     //------------------------------------------------------------------------------------------------------------------------
     //Reflejar Jugada del enemigo en nuestro panel y nos pone rojo el boton en el que hayan hecho contacto
     @FXML
@@ -100,6 +105,7 @@ public class FlotaController implements Initializable {
             String[] jugadaSplit;
 
             jugadaSplit = jugada.split(" ");
+            System.out.println(jugada);
             String jugadaEnemy = jugadaSplit[1];
             jugadaEnemy = jugadaEnemy.replace("boton", "botonplayer");
             // Obtener los botones del GridPane
@@ -112,8 +118,14 @@ public class FlotaController implements Initializable {
             Button miBoton = (Button) gridPlayer.lookup("#" + jugadaEnemy);
             if (miBoton.getStyle().equals("-fx-background-color: black")) {
                 miBoton.setStyle("-fx-background-color: red");
+                animateButtonCircle(botonBlanco, Color.YELLOW,1);
 
-            } else miBoton.setStyle("-fx-background-color: deepskyblue");
+
+
+            } else {
+                miBoton.setStyle("-fx-background-color: deepskyblue");
+                animateButtonCircle(miBoton, Color.BLUE, 5);
+            }
         }
     }
 
@@ -148,6 +160,7 @@ public class FlotaController implements Initializable {
                 aciertos++;
                 Platform.runLater(() -> counterPush.setText(String.valueOf(aciertos)));
                 botonBlanco.setStyle("-fx-background-color: red");
+                animateButtonCircle(botonBlanco, Color.YELLOW,1);
                 //Si el numero de aciertos es igual al numero de casillas. Entonces  hemos ganado
                 if (aciertos == 4) {
                     try {
@@ -201,10 +214,12 @@ public class FlotaController implements Initializable {
             } else {
                 String[] splitEnemy = response.split(" ");
                 String responseEnemy = splitEnemy[0];
-                if (enemigo.equals("")) enemigo = responseEnemy;
-                Platform.runLater(() -> lblResponse.setText(responseEnemy));
-                reflejarJugada(response, new ActionEvent());
-            }
+
+                    if (enemigo.equals("")) enemigo = responseEnemy;
+                    Platform.runLater(() -> lblResponse.setText(responseEnemy));
+                    reflejarJugada(response, new ActionEvent());
+                }
+
             return length;
         }
 
@@ -225,6 +240,7 @@ public class FlotaController implements Initializable {
     protected void handleEnemyButtonAction(ActionEvent event) {
         Button button = (Button) event.getSource(); // obtiene el botón que ha generado el evento
         button.setStyle("-fx-background-color: deepskyblue");
+        animateButtonCircle(button, Color.BLUE, 5);
         numBoton = button.getId(); // obtiene el número del botón a partir del ID
         botonBlanco = button;
         // Desactivar los botones
@@ -252,6 +268,7 @@ public class FlotaController implements Initializable {
             posicionBarcos += button.getId() + ",";
             contadorBarcos++;
             button.setStyle("-fx-background-color: black");
+            animateButtonCircle(button,Color.WHITE, 3);
             if (contadorBarcos == 4) {
                 panelBotones(new ActionEvent(), false, gridPlayer);
                 posicionBarcos = posicionBarcos.substring(0, posicionBarcos.length() - 1);
@@ -338,6 +355,7 @@ public class FlotaController implements Initializable {
         circleServer.setFill(Color.BLUE);
 
     }
+
     //------------------------------------------------------------------------------------------------------------------------
     //Funcion que CONECTA con el servidor en la direccion, el puerto  y el nombre de usuario introducidos
     public void showConfigServer() {
@@ -354,9 +372,13 @@ public class FlotaController implements Initializable {
                     server.init(Integer.parseInt(result.get()));
                     server.runServer();
                 } catch (SocketException e) {
-                    e.printStackTrace();
+                    Platform.runLater(() ->
+                            infoGame.setText("Servidor ABIERTO en localhost"));
+                    infoGame.setTextFill(Color.RED);
+                    circleServer.setFill(Color.RED);
+
                 } catch (IOException e) {
-                    e.printStackTrace();
+
                 }
             });
             thServer.start();
@@ -400,6 +422,54 @@ public class FlotaController implements Initializable {
         });
     }
 
+    //////---------------------------------------------------------------
+    //----------------------Funcion que redondea los botones-----------------------------
+    //------------------------------------------------------------------------------------------------------
+
+    public void gridPaneRound(GridPane g) {
+        GridPane gridPane = g; // Obtener referencia al GridPane
+        ObservableList<Node> children = gridPane.getChildren(); // Obtener todos los hijos del GridPane
+        for (Node node : children) {
+            if (node instanceof Button) { // Si el nodo es un botón
+                Button button = (Button) node;
+                Circle circle = new Circle(); // Crear un círculo
+                circle.setRadius(20); // Establecer el radio del círculo
+                button.setShape(circle); // Establecer el círculo como forma personalizada del botón
+            }
+        }
+
+    }
+
+    //// Funcion que pone una imagen al boton ------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------
+    public void setButtonImage(Button button, String imagePath) {
+        Image image = new Image(FlotaApp.class.getResource(imagePath).toString());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(button.getWidth() / 2);
+        imageView.setFitHeight(button.getHeight() / 2);
+        button.setGraphic(imageView);
+    }
+//   Esta funcion pone una animación en el botón, hace que un circulo de un color que pasamos por parametro,
+// ------Y se va haciendo grande o pequeño a la velocidad que le pasamops por parámetro
+// ------------------------------------------------------------------------------------------------------------------------
+    public void animateButtonCircle(Button button, Color color, int duration) {
+        Circle circle = new Circle(button.getWidth() / 4, button.getHeight() / 4, button.getWidth() / 4, color);
+        Platform.runLater(() ->
+                button.setGraphic(circle));
+
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(duration), circle);
+        scaleTransition.setFromX(1);
+        scaleTransition.setFromY(1);
+        scaleTransition.setToX(0.5);
+        scaleTransition.setToY(0.5);
+        scaleTransition.setCycleCount(Timeline.INDEFINITE);
+        scaleTransition.setAutoReverse(true);
+        scaleTransition.play();
+    }
+
+////----------------------------------------------------------
+
+
     //------------------------------------------------------------------------------------------------------------------------
     //Funciones INITIALIZES
     public void initialize() {
@@ -414,6 +484,10 @@ public class FlotaController implements Initializable {
         infoGame.setText("CONECTARSE AL SERVIDOR");
         infoGame.setTextFill(Color.WHITE);
         americanos.setDisable(true);
+        gridPaneRound(gridEnemy);
+        gridPaneRound(gridPlayer);
+
     }
+
 }
 

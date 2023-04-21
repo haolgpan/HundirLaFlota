@@ -35,10 +35,22 @@
                <children>
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="8.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Acertados: " wrappingWidth="123.43701171875" />
-                        <Label fx:id="counterPush" layoutX="151.0" layoutY="14.0" text="0" />
-                        <Text fx:id="counterPush2" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="10.0" />
-                        <Text layoutX="6.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Lanzados:" wrappingWidth="130.43701171875" />
+                        <Text fill="#633030ef" layoutX="8.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Acertados: " wrappingWidth="123.43701171875">
+                           <font>
+                              <Font name="Impact" size="14.0" />
+                           </font></Text>
+                        <Label fx:id="counterPush" layoutX="151.0" layoutY="14.0" text="0">
+                           <font>
+                              <Font name="Impact" size="14.0" />
+                           </font></Label>
+                        <Text fx:id="counterPush2" layoutX="154.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" wrappingWidth="10.0">
+                           <font>
+                              <Font name="Impact" size="14.0" />
+                           </font></Text>
+                        <Text layoutX="6.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torpedos Lanzados:" wrappingWidth="130.43701171875">
+                           <font>
+                              <Font name="Impact" size="14.0" />
+                           </font></Text>
                      </children>
                   </Pane>
                   <Pane prefHeight="85.0" prefWidth="572.0" style="-fx-background-color: GRAY;">
@@ -160,22 +172,22 @@
                         <Button fx:id="botonplayer0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handlePlayerButtonAction" />
                      </children>
                   </GridPane>
-                  <Label fx:id="lblResponse" layoutX="376.0" layoutY="62.0" prefHeight="62.0" prefWidth="201.0" text=" ">
+                  <Label fx:id="lblResponse" layoutX="270.0" layoutY="60.0" prefHeight="100.0" prefWidth="214.0" text=" ">
                      <font>
                         <Font name="Impact" size="14.0" />
                      </font>
                   </Label>
-                  <Text fill="#2e3a86" layoutX="379.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del enemigo">
+                  <Text fill="#2e3a86" layoutX="270.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del enemigo">
                      <font>
                         <Font name="Impact" size="24.0" />
                      </font>
                   </Text>
-                  <Text fill="#8a300c" layoutX="151.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del jugador">
+                  <Text fill="#8a300c" layoutX="262.0" layoutY="256.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero del jugador">
                      <font>
                         <Font name="Impact" size="24.0" />
                      </font>
                   </Text>
-                  <Label fx:id="namePlayer" layoutX="166.0" layoutY="288.0" prefHeight="58.0" prefWidth="176.0" text=" ">
+                  <Label fx:id="namePlayer" layoutX="270.0" layoutY="272.0" prefHeight="58.0" prefWidth="176.0" text=" ">
                      <font>
                         <Font name="Impact" size="18.0" />
                      </font>
@@ -185,8 +197,28 @@
                         <Font name="Impact" size="18.0" />
                      </font>
                   </Button>
-                  <ImageView fx:id="imagenBanderaJugador" fitHeight="79.0" fitWidth="126.0" layoutX="22.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="imagenBanderaEnemigo" fitHeight="79.0" fitWidth="134.0" layoutX="606.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imagenBanderaJugador" fitHeight="131.0" fitWidth="192.0" layoutX="22.0" layoutY="262.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imagenBanderaEnemigo" fitHeight="117.0" fitWidth="202.0" layoutX="580.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" />
+                  <Text layoutX="14.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-opacity: 0.3;" text="1   2   3   4   5" wrappingWidth="189.0">
+                     <font>
+                        <Font name="Impact" size="36.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="517.0" layoutY="435.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-opacity: 0.3;" text="1   2   3   4   5" wrappingWidth="189.0">
+                     <font>
+                        <Font name="Impact" size="36.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="195.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-opacity: 0.3;" text="A B C D E" wrappingWidth="22.0">
+                     <font>
+                        <Font name="Impact" size="30.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="701.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-opacity: 0.3;" text="A B C D E" wrappingWidth="22.0">
+                     <font>
+                        <Font name="Impact" size="30.0" />
+                     </font>
+                  </Text>
                </children>
             </Pane>
          </children>

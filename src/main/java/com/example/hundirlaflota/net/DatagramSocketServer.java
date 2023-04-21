@@ -20,6 +20,8 @@ public class DatagramSocketServer {
     private ArrayList <String> posicionBarcosJugador1= new ArrayList<>();
     private ArrayList <String> posicionBarcosJugador2= new ArrayList<>();
 
+    private boolean jugada=false;
+    private String jugadaAnterior ="";
     //Instàciar el socket
     public void init(int port) throws SocketException {
         socket = new DatagramSocket(port);
@@ -55,6 +57,14 @@ public class DatagramSocketServer {
                 String packet1 = new String(processData(packet.getData(), packet.getLength()), 0, packet.getLength());
                 nomSplit = packet1.split(" ");
                 if (nomSplit[0].equals("consultaTurno")) {
+
+                   // if(jugada){
+                   //     packet = new DatagramPacket(arrayTirades.get(arrayTirades.size() - 1).getBytes(), arrayTirades.get(arrayTirades.size() - 1).getBytes().length, clientIP, clientPort);
+                   //     socket.send(packet);
+                   //     jugada=false;
+                   // }
+
+
                     if(gameOver){
                         String blanco = ganador+ " gameover";
                         packet = new DatagramPacket(blanco.getBytes(), blanco.getBytes().length, clientIP, clientPort);
@@ -102,6 +112,7 @@ public class DatagramSocketServer {
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
                 socket.send(packet);
                 turno++;
+               // jugada=true;
             } else if (!nomSplit[0].equals("consultaTurno") && !nomSplit[1].contains(",")) {
                 packet = new DatagramPacket(sendingDataEnemy, sendingDataEnemy.length, clientIP, clientPort);
                 socket.send(packet);
