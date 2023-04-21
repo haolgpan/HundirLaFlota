@@ -215,7 +215,17 @@ public class FlotaController implements Initializable {
                 String[] splitEnemy = response.split(" ");
                 String responseEnemy = splitEnemy[0];
 
-                    if (enemigo.equals("")) enemigo = responseEnemy;
+                    if (enemigo.equals("")){
+                        enemigo = responseEnemy;
+                        if(enemigo.equals(nom)){
+                            String message = nom + " ganador"; // crea un mensaje con el valor actualizado del contador
+                            try {
+                                client.send(message.getBytes()); // envía el mensaje al servidor
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
                     Platform.runLater(() -> lblResponse.setText(responseEnemy));
                     reflejarJugada(response, new ActionEvent());
                 }
